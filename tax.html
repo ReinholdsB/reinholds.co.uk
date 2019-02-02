@@ -1,0 +1,77 @@
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/2.0.2/TweenMax.min.js"></script>
+
+<div id="calculator">
+    <div class="container">
+        <form action="">
+            <h1>The Tax-culator</h1>
+            <p>Calculate your taxes and income</p>
+
+            <label for="day-rate">Daily Rate</label>
+            <input type="number" name="dayRate" class="currency" v-model.number="dayRate"/>
+            <input type="range" min="100" max="1000" step="10" class="currency slider" v-model.number="dayRate">
+            <br/>
+
+            <label for="weeks-worked">Weeks worked</label>
+            <input type="number" name="weeks-worked" class="currency" v-model.number="weeksWorked"/>
+            <input type="range" min="0" max="52" step="1" class="currency slider" v-model.number="weeksWorked">
+
+            <label for="day-expense">Daily Expense</label>
+            <input type="number" name="day-expense" class="currency" v-model.number="dayExpense"/>
+            <input type="range" min="0" max="100" step="1" class="currency slider" v-model.number="dayExpense">
+            <br/>
+
+            <label for="day-expense">Monthly Expense</label>
+            <input type="number" name="month-expense" class="currency" v-model.number="monthExpense"/>
+            <input type="range" min="0" max="1000" step="1" class="currency slider" v-model.number="monthExpense">
+            <br/>
+
+            <label for="day-expense">Dividends</label>
+            <input type="number" name="dividends" class="currency" v-model.number="dividends"/>
+            <input type="range" min="0" max="200000" step="1000" class="currency slider" v-model.number="dividends">
+            <br/>
+
+            <label for="day-expense">Salary</label>
+            <input type="number" name="salary" class="currency" v-model.number="salary"/>
+            <input type="range" min="0" max="200000" step="10" class="currency slider" v-model.number="salary">
+            <br/>
+
+                <!--<label for="year">Year</label>-->
+                <!--<select name="year" v-model="year">-->
+                <!--<option value="1718">2017/2018</option>-->
+                <!--<option value="1819" selected >2018/2019</option>-->
+                <!--</select>-->
+        </form>
+
+        <label for="scale">Period</label>
+        <select name="scale" v-model="scale">
+            <option value="1" selected>Yearly</option>
+            <option value="12">Monthly</option>
+            <option value="52">Weekly</option>
+            <option value="365">Daily</option>
+        </select>
+
+        <table>
+            <tr>
+                <td>
+                    <div class="payment">Company</div>
+                    <div class="payment">Income: £{{ numFormat(perYear/scale) }}</div>
+                    <div class="payment">Net: £{{ numFormat(perYearNet/scale) }}</div>
+                    <div class="payment">Expenses: £{{ numFormat(yearlyExpense/scale) }}</div>
+                    <div class="payment">employerNI: £{{ numFormat(employerNI/scale) }}</div>
+                </td>
+                <td>
+                    <div class="payment">Personal</div>
+                    <div class="payment">Salary: £{{ numFormat(salary/scale) }}</div>
+                    <div class="payment">Salary Tax: £{{ numFormat(salaryTax/scale) }}</div>
+                    <div class="payment">Salary NI: £{{ numFormat(salaryNI/scale) }}</div>
+                    <div class="payment">Salary After Tax: £{{ numFormat(salaryAfterTax/scale) }}</div>
+                    <div class="payment">Dividends: £{{ numFormat(dividends/scale) }}</div>
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>
+
+<script src="script.js"></script>
+<link rel="stylesheet" type="text/css" href="style.css">
