@@ -11,11 +11,10 @@ var data = {
 
 var taxValues = {
     vat: 0.2,
-    corpTax: 0.19,
-
+    corpTax: 0.19
 };
 
-const TAX_SETTINGS = {
+const TAX = {
   year: '2018/19',
   allowance: {
     basic: 11500.00,
@@ -27,7 +26,7 @@ const TAX_SETTINGS = {
       taper: 100000.00,
     }
   },
-  incomeTax: {
+  income: {
     rate_0: {
       start: 0.00,
       end: 11850.00,
@@ -49,7 +48,7 @@ const TAX_SETTINGS = {
       rate: 0.45,
     }
   },
-  dividendTax: {
+  dividend: {
     rate_0: {
       start: 0.00,
       end: 2000.00,
@@ -71,7 +70,7 @@ const TAX_SETTINGS = {
       rate: 0.381,
     }
   },
-  nationalInsurance: {
+  natInsurance: {
     pensionAge: 65,
     rate_0: {
       start: 0.00,
@@ -110,121 +109,101 @@ var calculator = new Vue({
     el: '#calculator',
     data: data,
     computed: {
-        yearlyExpense: function(e){
+        yearlyExpense: function(e) {
             return (this.dayExpense * this.weeksWorked * 5) + (this.monthExpense * 12) + this.salary;
         },
-        yearlyIncome: function(e){
-            return this.weeksWorked * this.dayRate * 5
-        },
-        perYear: function(e){
-            return this.yearlyIncome || 0;
-        },
-        perYearNet: function(e){
+        yearlyIncome: function(e) { return this.weeksWorked * this.dayRate * 5 },
+        perYear: function(e) { return this.yearlyIncome || 0; },
+        perYearNet: function(e) {
             return (this.yearlyIncome - this.yearlyExpense) *
              (1 - taxValues.corpTax) - this.dividends || 0;
         },
-        salaryTax: function(e){
-            return calculateSalaryTax(this.salary) || 0;
-        },
-        employerNI: function(e){
-            return calculateEmployerNI(this.salary) || 0;
-        },
-        salaryNI: function(e){
-            return calculateSalaryNI(this.salary) || 0;
-        },
-        studentLoanContribution: function(e){
-            return calculateStudentLoanRepayment(this.salary) || 0;
-        },
-        salaryAfterTax: function(e){
-            return this.salary - calculateSalaryTax(this.salary) - calculateSalaryNI(this.salary) || 0;
-        },
-        dividendsTax: function(e){
-            return calculateDividendsTax(this.salary, this.dividends) || 0;
-        },
-        dividendsTaxed: function(e){
-            return this.dividends - this.dividendsTax || 0;
-        }
+        salaryTax: function(e) { return calcSalaryTax(this.salary) || 0; },
+        employerNI: function(e) { return calcEmployerNI(this.salary) || 0; },
+        salaryNI: function(e) { return calcSalaryNI(this.salary) || 0; },
+        studentLoanContribution: function(e) { return calcStudentLoanRepayment(this.salary) || 0; },
+        salaryAfterTax: function(e) { return this.salary - calcSalaryTax(this.salary) - calcSalaryNI(this.salary) || 0; },
+        dividendsTax: function(e) { return calcDividendsTax(this.salary, this.dividends) || 0; },
+        dividendsTaxed: function(e) { return this.dividends - this.dividendsTax || 0; }
     },
     methods: {
         //https://blog.tompawlak.org/number-currency-formatting-javascript
-        numFormat: function(e){
-            return e.toFixed(0).replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
-        }
+        numFormat: function(e) { return e.toFixed(0).replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,') }
     }
 });
 
-function calculateSalaryTax(salary, dividends)
+function calcSalaryTax(salary, dividends)
     var taxOnSalary = 0;
     const income = salary + dividends;
-    if (income > TAX_SETTINGS.incomeTax.rate_45.start) {
-        taxOnSalary += (salary - TAX_SETTINGS.incomeTax.rate_45.start) * TAX_SETTINGS.incomeTax.rate_45.rate;
-        taxOnSalary += (TAX_SETTINGS.incomeTax.rate_40.end - TAX_SETTINGS.incomeTax.rate_40.start) *TAX_SETTINGS.incomeTax.rate_40.rate;
-        taxOnSalary += (TAX_SETTINGS.incomeTax.rate_20.end - TAX_SETTINGS.incomeTax.rate_20.start) *TAX_SETTINGS.incomeTax.rate_20.rate;
-    } else if (income > TAX_SETTINGS.incomeTax.rate_40.start) {
-        taxOnSalary += (salary - TAX_SETTINGS.incomeTax.rate_40.start) * TAX_SETTINGS.incomeTax.rate_40.rate;
-        taxOnSalary += (TAX_SETTINGS.incomeTax.rate_20.end - TAX_SETTINGS.incomeTax.rate_20.start) *TAX_SETTINGS.incomeTax.rate_20.rate;
-    } else if (income > TAX_SETTINGS.incomeTax.rate_20.start) {
-        taxOnSalary += (salary - TAX_SETTINGS.incomeTax.rate_20.start) * TAX_SETTINGS.incomeTax.rate_20.rate;
+    if (income > TAX.income.rate_45.start) {
+        taxOnSalary += (salary - TAX.income.rate_45.start) * TAX.income.rate_45.rate;
+        taxOnSalary += (TAX.income.rate_40.end - TAX.income.rate_40.start) *TAX.income.rate_40.rate;
+        taxOnSalary += (TAX.income.rate_20.end - TAX.income.rate_20.start) *TAX.income.rate_20.rate;
+    } else if (income > TAX.income.rate_40.start) {
+        taxOnSalary += (salary - TAX.income.rate_40.start) * TAX.income.rate_40.rate;
+        taxOnSalary += (TAX.income.rate_20.end - TAX.income.rate_20.start) *TAX.income.rate_20.rate;
+    } else if (income > TAX.income.rate_20.start) {
+        taxOnSalary += (salary - TAX.income.rate_20.start) * TAX.income.rate_20.rate;
     }
     return taxOnSalary;
 }
 
-function calculateDividendsTax(salary, dividends){
+function calcDividendsTax(salary, dividends){
     var dividendsTax = 0;
     const income = salary + dividends;
-    if ( income > TAX_SETTINGS.incomeTax.rate_40.start) {
-        dividendsTax += (dividends - TAX_SETTINGS.divdendTax.rate_0.start) * TAX_SETTINGS.incomeTax.rate_45.rate;
-        dividendsTax += (TAX_SETTINGS.incomeTax.rate_40.end - TAX_SETTINGS.incomeTax.rate_40.start) *TAX_SETTINGS.incomeTax.rate_40.rate;
-        dividendsTax += (TAX_SETTINGS.incomeTax.rate_20.end - TAX_SETTINGS.incomeTax.rate_20.start) *TAX_SETTINGS.incomeTax.rate_20.rate;
-    } else if (income > TAX_SETTINGS.incomeTax.rate_40.start) {
-        dividendsTax += (dividends - TAX_SETTINGS.incomeTax.rate_40.start) * TAX_SETTINGS.incomeTax.rate_40.rate;
-        dividendsTax += (TAX_SETTINGS.incomeTax.rate_20.end - TAX_SETTINGS.incomeTax.rate_20.start) *TAX_SETTINGS.incomeTax.rate_20.rate;
-    } else if (income > TAX_SETTINGS.incomeTax.rate_20.start) {
-        dividendsTax += (dividends - TAX_SETTINGS.incomeTax.rate_20.start) * TAX_SETTINGS.incomeTax.rate_20.rate;
+    if ( income > TAX.income.rate_40.start) {
+        dividendsTax += (dividends - TAX.dividend.rate_0.start) * TAX.income.rate_45.rate;
+        dividendsTax += (TAX.income.rate_40.end - TAX.income.rate_40.start) *TAX.income.rate_40.rate;
+        dividendsTax += (TAX.income.rate_20.end - TAX.income.rate_20.start) *TAX.income.rate_20.rate;
+    } else if (income > TAX.income.rate_40.start) {
+        dividendsTax += (dividends - TAX.income.rate_40.start) * TAX.income.rate_40.rate;
+        dividendsTax += (TAX.income.rate_20.end - TAX.income.rate_20.start) *TAX.income.rate_20.rate;
+    } else if (income > TAX.income.rate_20.start) {
+        dividendsTax += (dividends - TAX.income.rate_20.start) * TAX.income.rate_20.rate;
     }
     return dividendsTax;
 }
 
-function calculateSalaryNI(salary){
-    var nationalInsurance = 0;
-    if (salary > TAX_SETTINGS.nationalInsurance.rate_2.start) {
-        nationalInsurance += (salary - TAX_SETTINGS.nationalInsurance.rate_2.start) * TAX_SETTINGS.nationalInsurance.rate_2.rate;
-        nationalInsurance += (TAX_SETTINGS.nationalInsurance.rate_12.end - TAX_SETTINGS.nationalInsurance.rate_12.start) *TAX_SETTINGS.nationalInsurance.rate_12.rate;
-    } else if (salary > TAX_SETTINGS.nationalInsurance.rate_12.start) {
-        nationalInsurance += (salary - TAX_SETTINGS.nationalInsurance.rate_12.start) * TAX_SETTINGS.nationalInsurance.rate_12.rate;
+function calcSalaryNI(salary){
+    var natInsurance = 0;
+    if (salary > TAX.natInsurance.rate_2.start) {
+        natInsurance += (salary - TAX.natInsurance.rate_2.start) * TAX.natInsurance.rate_2.rate;
+        natInsurance += (TAX.natInsurance.rate_12.end - TAX.natInsurance.rate_12.start) *TAX.natInsurance.rate_12.rate;
+    } else if (salary > TAX.natInsurance.rate_12.start) {
+        natInsurance += (salary - TAX.natInsurance.rate_12.start) * TAX.natInsurance.rate_12.rate;
     }
-    return nationalInsurance;
+    return natInsurance;
 }
 
-function calculateEmployerNI(salary){
-    var nationalInsurance = 0;
-    if (salary > TAX_SETTINGS.nationalInsurance.rate_employer.start) {
-        nationalInsurance += (salary - TAX_SETTINGS.nationalInsurance.rate_employer.start) * TAX_SETTINGS.nationalInsurance.rate_employer.rate;
+function calcEmployerNI(salary){
+    var natInsurance = 0;
+    if (salary > TAX.natInsurance.rate_employer.start) {
+        natInsurance += (salary - TAX.natInsurance.rate_employer.start) * TAX.natInsurance.rate_employer.rate;
     }
-    return nationalInsurance;
+    return natInsurance;
 }
 
-function calculateStudentLoanRepayment(salary, plan){
+function calcStudentLoanRepayment(salary, plan){
     var studentLoan = 0;
-    if (plan === 1 && salary > TAX_SETTINGS.studentLoan.plan_1.threshold) {
-        studentLoan += (salary - TAX_SETTINGS.studentLoan.plan_1.threshold) * TAX_SETTINGS.studentLoan.plan_1.rate;
-    } else if (plan === 2 && salary > TAX_SETTINGS.studentLoan.plan_2.threshold) {
-        studentLoan += (salary - TAX_SETTINGS.studentLoan.plan_2.threshold) * TAX_SETTINGS.studentLoan.plan_2.rate;
+    if (plan === 1 && salary > TAX.studentLoan.plan_1.threshold) {
+        studentLoan += (salary - TAX.studentLoan.plan_1.threshold) * TAX.studentLoan.plan_1.rate;
+    } else if (plan === 2 && salary > TAX.studentLoan.plan_2.threshold) {
+        studentLoan += (salary - TAX.studentLoan.plan_2.threshold) * TAX.studentLoan.plan_2.rate;
     }
     return studentLoan;
 }
 
-function calculateStudentLoanRepayment(salary, dividends){
+function calcStudentLoanRepayment(salary, dividends){
     var taxOnDividends = 0;
-    if (salary > TAX_SETTINGS.incomeTax.rate_45.start) {
-        taxOnDividends += (salary - TAX_SETTINGS.incomeTax.rate_45.start) * TAX_SETTINGS.incomeTax.rate_45.rate;
-        taxOnDividends += (TAX_SETTINGS.incomeTax.rate_40.end - TAX_SETTINGS.incomeTax.rate_40.start) *TAX_SETTINGS.incomeTax.rate_40.rate;
-        taxOnDividends += (TAX_SETTINGS.incomeTax.rate_20.end - TAX_SETTINGS.incomeTax.rate_20.start) *TAX_SETTINGS.incomeTax.rate_20.rate;
-    } else if (salary > TAX_SETTINGS.incomeTax.rate_40.start) {
-        taxOnDividends += (salary - TAX_SETTINGS.incomeTax.rate_40.start) * TAX_SETTINGS.incomeTax.rate_40.rate;
-        taxOnDividends += (TAX_SETTINGS.incomeTax.rate_20.end - TAX_SETTINGS.incomeTax.rate_20.start) *TAX_SETTINGS.incomeTax.rate_20.rate;
-    } else if (salary > TAX_SETTINGS.incomeTax.rate_20.start) {
-        taxOnDividends += (salary - TAX_SETTINGS.incomeTax.rate_20.start) * TAX_SETTINGS.incomeTax.rate_20.rate;
+    if (salary > TAX.income.rate_45.start) {
+        taxOnDividends += (salary - TAX.income.rate_45.start) * TAX.income.rate_45.rate;
+        taxOnDividends += (TAX.income.rate_40.end - TAX.income.rate_40.start) *TAX.income.rate_40.rate;
+        taxOnDividends += (TAX.income.rate_20.end - TAX.income.rate_20.start) *TAX.income.rate_20.rate;
+    } else if (salary > TAX.income.rate_40.start) {
+        taxOnDividends += (salary - TAX.income.rate_40.start) * TAX.income.rate_40.rate;
+        taxOnDividends += (TAX.income.rate_20.end - TAX.income.rate_20.start) *TAX.income.rate_20.rate;
+    } else if (salary > TAX.income.rate_20.start) {
+        taxOnDividends += (salary - TAX.income.rate_20.start) * TAX.income.rate_20.rate;
     }
     return taxOnDividends;
 }
