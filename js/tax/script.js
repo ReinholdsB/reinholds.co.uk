@@ -106,7 +106,7 @@ var calculator = new Vue({
             return (this.yearlyIncome - this.yearlyExpense) * (1 - taxValues.corpTax);
         },
         salaryTax: function () {
-            return calcSalaryTax(this.salary, this.dividends);
+            return calcSalaryTax(this.salary);
         },
         employerNI: function () {
             return calcEmployerNI(this.salary);
@@ -144,18 +144,19 @@ var calculator = new Vue({
     }
 });
 
-function calcSalaryTax(salary, dividends) {
+function calcSalaryTax(salary) {
     let taxOnSalary = 0;
     const tax = TAX.income;
-    const income = salary + dividends;
-    if (income > tax.rate_45.start) {
+    if (salary > tax.rate_45.start) {
         taxOnSalary += (salary - tax.rate_45.start) * tax.rate_45.rate;
         taxOnSalary += (tax.rate_40.end - tax.rate_40.start) * tax.rate_40.rate;
         taxOnSalary += (tax.rate_20.end - tax.rate_20.start) * tax.rate_20.rate;
-    } else if (income > tax.rate_40.start) {
+
+    } else if (salary > tax.rate_40.start) {
         taxOnSalary += (salary - tax.rate_40.start) * tax.rate_40.rate;
         taxOnSalary += (tax.rate_20.end - tax.rate_20.start) * tax.rate_20.rate;
-    } else if (income > tax.rate_20.start) {
+
+    } else if (salary > tax.rate_20.start) {
         taxOnSalary += (salary - tax.rate_20.start) * tax.rate_20.rate;
     }
     return taxOnSalary;
