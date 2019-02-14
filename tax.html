@@ -63,15 +63,17 @@
                 <td>
                     <div class="payment">Personal</div>
                     <div class="payment">Salary: £{{ numFormat(salary/scale) }}</div>
-                    <div class="payment">Salary Tax: £{{ numFormat(salaryTax/scale) }}</div>
-                    <div class="payment">Salary NI: £{{ numFormat(salaryNI/scale) }}</div>
+                    <div class="payment">Salary Tax: - £{{ numFormat(salaryTax/scale) }}</div>
+                    <div class="payment">Salary NI: - £{{ numFormat(salaryNI/scale) }}</div>
                     <div class="payment">Salary After Tax: £{{ numFormat(salaryAfterTax/scale) }}</div>
                     <div class="payment">Dividends: £{{ numFormat(dividends/scale) }}</div>
+                    <div class="payment">Dividends Tax: - £{{ numFormat(dividendsTax/scale) }}</div>
+                    <div class="payment">Dividends Taxed: £{{ numFormat(dividendsTaxed/scale) }}</div>
                 </td>
             </tr>
         </table>
     </div>
 </div>
 
-<script src="script.js"></script>
-<link rel="stylesheet" type="text/css" href="style.css">
+<script src="js/tax/script.js"></script>
+<link rel="stylesheet" type="text/css" href="css/tax/style.css">

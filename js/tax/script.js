@@ -35,11 +35,11 @@ const TAX_SETTINGS = {
     },
     rate_20: {
       start: 11850.00,
-      end: 33500.00,
+      end: 46350.00,
       rate: 0.20,
     },
     rate_40: {
-      start: 33500.00,
+      start: 46350.00,
       end: 150000.00,
       rate: 0.40,
     },
@@ -55,14 +55,19 @@ const TAX_SETTINGS = {
       end: 2000.00,
       rate: 0.00,
     },
-    rate_75: {
-      start: 0.00,
-      end: 33500.00,
+    rate_075: {
+      start: 11850.00,
+      end: 46350.00,
+      rate: 0.075,
+    },
+    rate_40: {
+      start: 46350.00,
+      end: 150000,
       rate: 0.325,
     },
     rate_40: {
-      start: 33500.00,
-      end: 150000.00,
+      start: 150000.00,
+      end: -1,
       rate: 0.381,
     }
   },
@@ -91,11 +96,11 @@ const TAX_SETTINGS = {
   },
   studentLoan: {
     plan_1: {
-      threshold: 17775.00,
+      threshold: 18330.00,
       rate: 0.09,
     },
     plan_2: {
-      threshold: 21000.00,
+      threshold: 25000.00,
       rate: 0.09,
     }
   }
@@ -133,8 +138,11 @@ var calculator = new Vue({
         salaryAfterTax: function(e){
             return this.salary - calculateSalaryTax(this.salary) - calculateSalaryNI(this.salary) || 0;
         },
-        dividendsAfterTax: function(e){
-            return this.dividends * (1 - taxValues.corpTax) || 0;
+        dividendsTax: function(e){
+            return calculateDividendsTax(this.salary, this.dividends) || 0;
+        },
+        dividendsTaxed: function(e){
+            return this.dividends - this.dividendsTax || 0;
         }
     },
     methods: {
@@ -145,19 +153,36 @@ var calculator = new Vue({
     }
 });
 
-function calculateSalaryTax(salary){
+function calculateSalaryTax(salary, dividends)
     var taxOnSalary = 0;
-    if (salary > TAX_SETTINGS.incomeTax.rate_45.start) {
+    const income = salary + dividends;
+    if (income > TAX_SETTINGS.incomeTax.rate_45.start) {
         taxOnSalary += (salary - TAX_SETTINGS.incomeTax.rate_45.start) * TAX_SETTINGS.incomeTax.rate_45.rate;
         taxOnSalary += (TAX_SETTINGS.incomeTax.rate_40.end - TAX_SETTINGS.incomeTax.rate_40.start) *TAX_SETTINGS.incomeTax.rate_40.rate;
         taxOnSalary += (TAX_SETTINGS.incomeTax.rate_20.end - TAX_SETTINGS.incomeTax.rate_20.start) *TAX_SETTINGS.incomeTax.rate_20.rate;
-    } else if (salary > TAX_SETTINGS.incomeTax.rate_40.start) {
+    } else if (income > TAX_SETTINGS.incomeTax.rate_40.start) {
         taxOnSalary += (salary - TAX_SETTINGS.incomeTax.rate_40.start) * TAX_SETTINGS.incomeTax.rate_40.rate;
         taxOnSalary += (TAX_SETTINGS.incomeTax.rate_20.end - TAX_SETTINGS.incomeTax.rate_20.start) *TAX_SETTINGS.incomeTax.rate_20.rate;
-    } else if (salary > TAX_SETTINGS.incomeTax.rate_20.start) {
+    } else if (income > TAX_SETTINGS.incomeTax.rate_20.start) {
         taxOnSalary += (salary - TAX_SETTINGS.incomeTax.rate_20.start) * TAX_SETTINGS.incomeTax.rate_20.rate;
     }
     return taxOnSalary;
+}
+
+function calculateDividendsTax(salary, dividends){
+    var dividendsTax = 0;
+    const income = salary + dividends;
+    if ( income > TAX_SETTINGS.incomeTax.rate_40.start) {
+        dividendsTax += (dividends - TAX_SETTINGS.divdendTax.rate_0.start) * TAX_SETTINGS.incomeTax.rate_45.rate;
+        dividendsTax += (TAX_SETTINGS.incomeTax.rate_40.end - TAX_SETTINGS.incomeTax.rate_40.start) *TAX_SETTINGS.incomeTax.rate_40.rate;
+        dividendsTax += (TAX_SETTINGS.incomeTax.rate_20.end - TAX_SETTINGS.incomeTax.rate_20.start) *TAX_SETTINGS.incomeTax.rate_20.rate;
+    } else if (income > TAX_SETTINGS.incomeTax.rate_40.start) {
+        dividendsTax += (dividends - TAX_SETTINGS.incomeTax.rate_40.start) * TAX_SETTINGS.incomeTax.rate_40.rate;
+        dividendsTax += (TAX_SETTINGS.incomeTax.rate_20.end - TAX_SETTINGS.incomeTax.rate_20.start) *TAX_SETTINGS.incomeTax.rate_20.rate;
+    } else if (income > TAX_SETTINGS.incomeTax.rate_20.start) {
+        dividendsTax += (dividends - TAX_SETTINGS.incomeTax.rate_20.start) * TAX_SETTINGS.incomeTax.rate_20.rate;
+    }
+    return dividendsTax;
 }
 
 function calculateSalaryNI(salary){
