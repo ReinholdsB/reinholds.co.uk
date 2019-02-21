@@ -1,3 +1,5 @@
+'use strict';
+
 var data = {
     dayRate: 600,
     dayExpense: 16,
@@ -17,33 +19,33 @@ var taxValues = {
 const TAX = {
     year: '2018/19',
     allowance: {
-        basic: 11850.00,
-        age_65_74: 11850.00,
-        age_75_over: 11850.00,
-        blind: 2320.00,
+        basic: 11850,
+        age_65_74: 11850,
+        age_75_over: 11850,
+        blind: 2320,
         thresholds: {
-            age: 27700.00,
-            taper: 100000.00
+            age: 27700,
+            taper: 100000
         }
     },
     income: {
         rate_0: {
-            start: 0.00,
-            end: 11850.00,
-            rate: 0.00,
+            start: 0,
+            end: 11850,
+            rate: 0,
         },
         rate_20: {
-            start: 11850.00,
-            end: 46350.00,
+            start: 11851,
+            end: 46350,
             rate: 0.20,
         },
         rate_40: {
-            start: 46350.00,
-            end: 150000.00,
+            start: 46351,
+            end: 150000,
             rate: 0.40,
         },
         rate_45: {
-            start: 150000,
+            start: 150001,
             end: -1,
             rate: 0.45,
         }
@@ -57,33 +59,33 @@ const TAX = {
     natInsurance: {
         pensionAge: 65,
         rate_0: {
-            start: 0.00,
-            end: 162.00,
-            rate: 0.00,
+            start: 0,
+            end: 162 * 52,
+            rate: 0,
         },
         rate_12: {
-            start: 162.01,
-            end: 892.00,
+            start: 162 * 52,
+            end: 892 * 52,
             rate: 0.12,
         },
         rate_2: {
-            start: 892.00,
+            start: 892 * 52,
             end: -1,
             rate: 0.02,
         },
         rate_employer: {
-            start: 162.01,
+            start: 162.00 * 52,
             end: -1,
             rate: 0.138,
         }
     },
     studentLoan: {
         plan_1: {
-            threshold: 18330.00,
+            threshold: 18330,
             rate: 0.09,
         },
         plan_2: {
-            threshold: 25000.00,
+            threshold: 25000,
             rate: 0.09,
         }
     }
@@ -144,7 +146,7 @@ var calculator = new Vue({
     }
 });
 
-function calcSalaryTax(salary) {
+function calcIncomeTax(salary) {
     let taxOnSalary = 0;
     const tax = TAX.income;
     if (salary > tax.rate_45.start) {
@@ -159,14 +161,11 @@ function calcSalaryTax(salary) {
     } else if (salary > tax.rate_20.start) {
         taxOnSalary += (salary - tax.rate_20.start) * tax.rate_20.rate;
     }
-    return taxOnSalary;
+    return roundCurrency(taxOnSalary);
 }
 
-console.info("salary for 30k: " + calcSalaryTax(30000, 0));
-console.info("salary for 30k: " + calcSalaryTax(300000, 0) + " should be 120,600.00");
-
 function calcDividendsTax(salary, dividends) {
-    var tax = 0;
+    let tax = 0;
     const income = salary + dividends;
     let iTax = TAX.income;
     let dTax = TAX.dividend;
@@ -184,7 +183,6 @@ function calcDividendsTax(salary, dividends) {
             tax += (dividends - (iTax.rate_20.start - salary)) * dTax.rate_075;
         }
     } else {
-
         if (income > iTax.rate_45.start) {
             tax += (dividends - (iTax.rate_45.start - salary)) * dTax.rate_381;
             tax += ((iTax.rate_45.start - iTax.rate_40.start) - salary) * dTax.rate_325;
@@ -196,36 +194,120 @@ function calcDividendsTax(salary, dividends) {
             tax += (dividends - (iTax.rate_20.start - salary)) * dTax.rate_075;
         }
     }
+    return roundCurrency(tax);
+}
 
-    return tax;
+function roundCurrency(x) {
+    return Math.round(x * 100) / 100;
 }
 
 function calcSalaryNI(salary) {
-    var natInsurance = 0;
+    let natInsurance = 0;
     const ni = TAX.natInsurance;
-    if (salary / 52 > ni.rate_2.start) {
-        natInsurance += (salary / 52 - ni.rate_2.start) * ni.rate_2.rate;
-        natInsurance += (ni.rate_12.end - ni.rate_12.start) * ni.rate_12.rate;
-    } else if (salary / 52 > ni.rate_12.start) {
-        natInsurance += (salary / 52 - ni.rate_12.start) * ni.rate_12.rate;
+    const weeklyRate = salary;
+    if (weeklyRate > ni.rate_12.end) {
+        natInsurance += (weeklyRate - ni.rate_12.end) * ni.rate_2.rate;
+        natInsurance += (ni.rate_12.end - ni.rate_0.end) * ni.rate_12.rate;
+    } else if (weeklyRate > ni.rate_0.end) {
+        natInsurance += (weeklyRate - ni.rate_0.end) * ni.rate_12.rate;
     }
-    return natInsurance * 52;
+    return roundCurrency(natInsurance);
 }
 
 function calcEmployerNI(salary) {
-    var natInsurance = 0;
+    let natInsurance = 0;
     if (salary > TAX.natInsurance.rate_employer.start) {
-        natInsurance += (salary / 52 - TAX.natInsurance.rate_employer.start) * TAX.natInsurance.rate_employer.rate;
+        natInsurance += (salary - TAX.natInsurance.rate_employer.start) * TAX.natInsurance.rate_employer.rate;
     }
-    return natInsurance * 52;
+    return roundCurrency(natInsurance);
 }
 
 function calcStudentLoanRepayment(salary, plan) {
-    var studentLoan = 0;
+    let studentLoan = 0;
     if (plan === 1 && salary > TAX.studentLoan.plan_1.threshold) {
         studentLoan += (salary - TAX.studentLoan.plan_1.threshold) * TAX.studentLoan.plan_1.rate;
     } else if (plan === 2 && salary > TAX.studentLoan.plan_2.threshold) {
         studentLoan += (salary - TAX.studentLoan.plan_2.threshold) * TAX.studentLoan.plan_2.rate;
     }
-    return studentLoan;
+    return roundCurrency(studentLoan);
+}
+
+
+for (const [k, v] of Object.entries({
+    1: {salary: 5000, ni: 0, incomeTax: 0},
+    2: {salary: 8424, ni: 0, incomeTax: 0},
+    3: {salary: 15000, ni: 789.12, incomeTax: 628.20},
+    4: {salary: 46350, ni: 4551.12, incomeTax: 6898.20},
+    5: {salary: 150000, ni: 6624.12, incomeTax: 53100},
+})) {
+    const actualNi = calcSalaryNI(v.salary);
+    test(actualNi === v.ni, "NI calculation - v.salary=" + v.salary + ", expected=" + v.ni + ", actual=" + actualNi);
+
+    const actualIncomeTax = calcIncomeTax(v.salary);
+    test(actualIncomeTax === v.incomeTax, "incomeTax calculation - v.salary=" + v.salary + ", expected=" + v.incomeTax + ", actual=" + actualIncomeTax);
+}
+
+// 15_000
+// your Income Tax is	£628.20
+// your National Insurance is	£789.12
+// in total you pay	£1,417.32
+
+//46350
+// \Your estimated take-home pay for 2018 to 2019 is
+//
+// £34,900.68 a year
+//
+// Based on the information you’ve given us:
+//
+// your Income Tax is	£6,898.20
+// your National Insurance is	£4,551.12
+// in total you pay	£11,449.32
+
+// 150_000
+// Your estimated take-home pay for 2018 to 2019 is
+//
+// £90,275.88 a year
+//
+// Based on the information you’ve given us:
+//
+//     your Income Tax is	£53,100
+// your National Insurance is	£6,624.12
+// in total you pay	£59,724.12
+
+// for sync tests
+function test(condition, message) {
+    try {
+        console.assert.apply(console, arguments);
+        if (typeof message === 'string' && condition) {
+            console.log('\u2714 ' + message);
+        }
+    } catch (error) {
+        test.exitCode = 1;
+        console.error('\u2716 ' + error);
+    }
+}
+
+// for async tests
+test.async = function (fn, timeout) {
+    var timer = setTimeout(
+        function () {
+            test(false, 'timeout ' + fn);
+        },
+        timeout || test.timeout
+    );
+    fn(function () {
+        clearTimeout(timer);
+    });
+};
+
+// default timeout
+test.timeout = 10000;
+
+// for node env only
+try {
+    process.on('exit', function () {
+        process.exit(test.exitCode || 0);
+    });
+    module.exports = test;
+} catch (browser) {
 }
