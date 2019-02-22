@@ -91,7 +91,7 @@ const TAX = {
     }
 };
 
-var calculator = new Vue({
+const calculator = new Vue({
     el: '#calculator',
     data: data,
     computed: {
@@ -108,7 +108,7 @@ var calculator = new Vue({
             return (this.yearlyIncome - this.yearlyExpense) * (1 - taxValues.corpTax);
         },
         salaryTax: function () {
-            return calcSalaryTax(this.salary);
+            return calcIncomeTax(this.salary);
         },
         employerNI: function () {
             return calcEmployerNI(this.salary);
@@ -120,7 +120,7 @@ var calculator = new Vue({
             return calcStudentLoanRepayment(this.salary , 1);
         },
         salaryAfterTax: function () {
-            return this.salary - calcSalaryTax(this.salary) - calcSalaryNI(this.salary);
+            return this.salary - calcIncomeTax(this.salary) - calcSalaryNI(this.salary);
         },
         dividends: function () {
             return this.perYearNet;
