@@ -29,53 +29,46 @@ const TAX = {
         }
     },
     income: {
-        rate_0: {
-            start: 0,
-            end: 11850,
-            rate: 0,
-        },
-        rate_20: {
-            start: 11851,
-            end: 46350,
+        basic: {
+            till: 34500,
             rate: 0.20,
         },
-        rate_40: {
-            start: 46351,
-            end: 150000,
+        higher: {
+            till: 150000,
             rate: 0.40,
         },
-        rate_45: {
-            start: 150001,
-            end: -1,
+        additional: {
+            start: 150000,
+            till: -1,
             rate: 0.45,
         }
     },
     dividend: {
         allowance: 2000,
-        rate_075: 0.075,
-        rate_325: 0.325,
-        rate_381: 0.381
+        basic: 0.075,
+        higher: 0.325,
+        additional: 0.381
     },
     natInsurance: {
         pensionAge: 65,
         rate_0: {
             start: 0,
-            end: 162 * 52,
+            till: 162 * 52,
             rate: 0,
         },
         rate_12: {
             start: 162 * 52,
-            end: 892 * 52,
+            till: 892 * 52,
             rate: 0.12,
         },
         rate_2: {
             start: 892 * 52,
-            end: -1,
+            till: -1,
             rate: 0.02,
         },
         rate_employer: {
             start: 162.00 * 52,
-            end: -1,
+            till: -1,
             rate: 0.138,
         }
     },
@@ -108,7 +101,7 @@ const calculator = new Vue({
             return (this.yearlyIncome - this.yearlyExpense) * (1 - taxValues.corpTax);
         },
         salaryTax: function () {
-            return calcIncomeTax(this.salary);
+            return calcIncomeTax(this.salary).totalTax;
         },
         employerNI: function () {
             return calcEmployerNI(this.salary);
@@ -126,7 +119,7 @@ const calculator = new Vue({
             return this.perYearNet;
         },
         dividendsTax: function () {
-            return calcDividendsTax(this.salary, this.dividends);
+            return calcIncomeTax(this.salary, this.dividends).dividends.totalTax;
         },
         dividendsTaxed: function () {
             return this.dividends - this.dividendsTax;
@@ -146,55 +139,95 @@ const calculator = new Vue({
     }
 });
 
-function calcIncomeTax(salary) {
-    let taxOnSalary = 0;
-    const tax = TAX.income;
-    if (salary > tax.rate_45.start) {
-        taxOnSalary += (salary - tax.rate_45.start) * tax.rate_45.rate;
-        taxOnSalary += (tax.rate_40.end - tax.rate_40.start) * tax.rate_40.rate;
-        taxOnSalary += (tax.rate_20.end - tax.rate_20.start) * tax.rate_20.rate;
-
-    } else if (salary > tax.rate_40.start) {
-        taxOnSalary += (salary - tax.rate_40.start) * tax.rate_40.rate;
-        taxOnSalary += (tax.rate_20.end - tax.rate_20.start) * tax.rate_20.rate;
-
-    } else if (salary > tax.rate_20.start) {
-        taxOnSalary += (salary - tax.rate_20.start) * tax.rate_20.rate;
-    }
-    return roundCurrency(taxOnSalary);
+function onlyPositive(value) {
+    return Math.max(0, value) || 0;
 }
 
-function calcDividendsTax(salary, dividends) {
-    let tax = 0;
+function calcIncomeTax(salary, dividends) {
     const income = salary + dividends;
-    let iTax = TAX.income;
-    let dTax = TAX.dividend;
+    const tax = TAX.income;
+    const allowanceReduction = onlyPositive(income - TAX.allowance.thresholds.taper) / 2;
+    const allowance = onlyPositive(TAX.allowance.basic - allowanceReduction);
 
-    dividends = dividends - dTax.allowance;
-    if ((salary) < iTax.rate_20.start) {
-        if (income > iTax.rate_45.start) {
-            tax += (dividends - (iTax.rate_45.start - salary)) * dTax.rate_381;
-            tax += ((iTax.rate_45.start - iTax.rate_40.start) - salary) * dTax.rate_325;
-            tax += ((iTax.rate_40.start - iTax.rate_20.start) - salary) * dTax.rate_075;
-        } else if (income > iTax.rate_40.start) {
-            tax += (dividends - (iTax.rate_40.start - salary)) * dTax.rate_325;
-            tax += ((iTax.rate_40.start - iTax.rate_20.start) - salary) * dTax.rate_075;
-        } else if (income > iTax.rate_20.start) {
-            tax += (dividends - (iTax.rate_20.start - salary)) * dTax.rate_075;
-        }
+    const basicRateSalaryAmount = onlyPositive(Math.min(salary, tax.basic.till + allowance) - allowance);
+    const higherRateSalaryAmount = onlyPositive(Math.min(salary, tax.higher.till) - (tax.basic.till + allowance));
+    const additionalRateSalaryAmount = onlyPositive(salary - tax.higher.till);
+
+    const basicRateTax = tax.basic.rate * basicRateSalaryAmount;
+    const higherRateTax = tax.higher.rate * higherRateSalaryAmount;
+    const additionalRateTax = tax.additional.rate * additionalRateSalaryAmount;
+
+    return {
+        allowance: Math.round(allowance),
+        allowanceReduction: Math.round(allowanceReduction),
+
+        basicRateSalaryAmount: Math.round(basicRateSalaryAmount),
+        higherRateSalaryAmount: Math.round(higherRateSalaryAmount),
+        additionalRateSalaryAmount: Math.round(additionalRateSalaryAmount),
+
+        basicRateTax: Math.round(basicRateTax),
+        higherRateTax: Math.round(higherRateTax),
+        additionalRateTax: Math.round(additionalRateTax),
+
+        totalTax: roundCurrency(basicRateTax + higherRateTax + additionalRateTax),
+        totalNet: roundCurrency(basicRateSalaryAmount + higherRateSalaryAmount + additionalRateSalaryAmount)
+    };
+}
+
+function calcSalaryAndDividendsTax(salary, dividends) {
+    if (dividends <= TAX.dividend.allowance) return {
+        basicRateTax: 0,
+        higherRateTax: 0,
+        additionalTaxRateMath: 0,
+        totalTax: 0
+    };
+    const income = salary + dividends;
+
+    const salaryTaxes = calcIncomeTax(salary, dividends);
+    const allowance = salaryTaxes.allowance;
+
+    const tax = TAX.income;
+
+    let additionalRateDividend;
+    let higherRateDividend;
+    let basicRateDividend;
+
+    const higherTill = tax.higher.till;
+    const basicTill = tax.basic.till;
+
+    const basicLimit = basicTill + TAX.allowance.basic;
+
+    //TODO Handle cases where dividend allowance falls between tax brackets
+    if (salary > higherTill) {
+        basicRateDividend = 0;
+        higherRateDividend = 0;
+        additionalRateDividend = onlyPositive(dividends - TAX.dividend.allowance);
+    } else if (salary > basicLimit) {
+        additionalRateDividend = onlyPositive(income - higherTill);
+        higherRateDividend = onlyPositive(Math.min(onlyPositive(higherTill - salary), dividends) - TAX.dividend.allowance);
+        basicRateDividend = 0;
     } else {
-        if (income > iTax.rate_45.start) {
-            tax += (dividends - (iTax.rate_45.start - salary)) * dTax.rate_381;
-            tax += ((iTax.rate_45.start - iTax.rate_40.start) - salary) * dTax.rate_325;
-            tax += ((iTax.rate_40.start - iTax.rate_20.start) - salary) * dTax.rate_075;
-        } else if (income > iTax.rate_40.start) {
-            tax += (dividends - (iTax.rate_40.start - salary)) * dTax.rate_325;
-            tax += ((iTax.rate_40.start - iTax.rate_20.start) - salary) * dTax.rate_075;
-        } else if (income > iTax.rate_20.start) {
-            tax += (dividends - (iTax.rate_20.start - salary)) * dTax.rate_075;
-        }
+        additionalRateDividend = onlyPositive(income - higherTill);
+
+        const higherAllowance = onlyPositive(TAX.dividend.allowance - basicLimit - salary);
+
+        higherRateDividend = onlyPositive(Math.min(onlyPositive(income - basicLimit - higherAllowance), higherTill - basicLimit));
+
+        basicRateDividend = onlyPositive(Math.min(dividends, basicLimit) - TAX.dividend.allowance - onlyPositive(allowance - salary));
     }
-    return roundCurrency(tax);
+
+    const additionalTaxRate = TAX.dividend.additional * additionalRateDividend;
+    const higherRateTax = TAX.dividend.higher * higherRateDividend;
+    const basicRateTax = TAX.dividend.basic * basicRateDividend;
+
+    const result = {
+        dividendAllowance: Math.round(TAX.dividend.allowance),
+        basicRateTax: Math.round(basicRateTax),
+        higherRateTax: Math.round(higherRateTax),
+        additionalTaxRateMath: Math.round(additionalTaxRate),
+        totalTax: Math.round(basicRateTax + higherRateTax + additionalTaxRate)
+    };
+    return result;
 }
 
 function roundCurrency(x) {
@@ -202,16 +235,11 @@ function roundCurrency(x) {
 }
 
 function calcSalaryNI(salary) {
-    let natInsurance = 0;
     const ni = TAX.natInsurance;
-    const weeklyRate = salary;
-    if (weeklyRate > ni.rate_12.end) {
-        natInsurance += (weeklyRate - ni.rate_12.end) * ni.rate_2.rate;
-        natInsurance += (ni.rate_12.end - ni.rate_0.end) * ni.rate_12.rate;
-    } else if (weeklyRate > ni.rate_0.end) {
-        natInsurance += (weeklyRate - ni.rate_0.end) * ni.rate_12.rate;
-    }
-    return roundCurrency(natInsurance);
+    const basicRateNi = onlyPositive(Math.min(salary, ni.rate_12.till) - ni.rate_0.till) * ni.rate_12.rate;
+    const higherRateNi = onlyPositive(salary - ni.rate_12.till) * ni.rate_2.rate;
+
+    return roundCurrency(basicRateNi + higherRateNi);
 }
 
 function calcEmployerNI(salary) {
@@ -232,54 +260,63 @@ function calcStudentLoanRepayment(salary, plan) {
     return roundCurrency(studentLoan);
 }
 
-
-for (const [k, v] of Object.entries({
-    1: {salary: 5000, ni: 0, incomeTax: 0},
-    2: {salary: 8424, ni: 0, incomeTax: 0},
-    3: {salary: 15000, ni: 789.12, incomeTax: 628.20},
-    4: {salary: 46350, ni: 4551.12, incomeTax: 6898.20},
-    5: {salary: 150000, ni: 6624.12, incomeTax: 53100},
-})) {
-    const actualNi = calcSalaryNI(v.salary);
-    test(actualNi === v.ni, "NI calculation - v.salary=" + v.salary + ", expected=" + v.ni + ", actual=" + actualNi);
-
-    const actualIncomeTax = calcIncomeTax(v.salary);
-    test(actualIncomeTax === v.incomeTax, "incomeTax calculation - v.salary=" + v.salary + ", expected=" + v.incomeTax + ", actual=" + actualIncomeTax);
-}
-
-// 15_000
-// your Income Tax is	£628.20
-// your National Insurance is	£789.12
-// in total you pay	£1,417.32
-
-//46350
-// \Your estimated take-home pay for 2018 to 2019 is
+// for (const [k, v] of Object.entries({
+//     '01': {salary: 5000, ni: 0, incomeTax: 0, employerNi: 0, dividend: 0, dividendTax: 0},
+//     '02': {salary: 8424, ni: 0, incomeTax: 0, employerNi: 0, dividend: 0, dividendTax: 0},
+//     '03': {salary: 15000, ni: 789.12, incomeTax: 630, employerNi: 907.49, dividend: 0, dividendTax: 0},
+//     '04': {salary: 46350, ni: 4551.12, incomeTax: 6900, employerNi: 5233.79, dividend: 0, dividendTax: 0},
+//     '05': {salary: 80000, ni: 5227.52, incomeTax: 20360, employerNi: 9877.49, dividend: 0, dividendTax: 0},
+//     '06': {salary: 150000, ni: 6627.52, incomeTax: 53100, employerNi: 19537.49, dividend: 0, dividendTax: 0},
+//     '07': {salary: 200000, ni: 7627.52, incomeTax: 75600, employerNi: 26437.49, dividend: 0, dividendTax: 0},
 //
-// £34,900.68 a year
+//     '11': {salary: 1000, ni: 0, incomeTax: 0, employerNi: 0, dividend: 2000, dividendTax: 0},
+//     '14': {salary: 46350, ni: 4551.12, incomeTax: 6900, employerNi: 5233.79, dividend: 2000, dividendTax: 0},
+//     '17': {salary: 200000, ni: 7627.52, incomeTax: 75600, employerNi: 26437.49, dividend: 2000, dividendTax: 0},
 //
-// Based on the information you’ve given us:
+//     '21': {salary: 0, ni: 0, incomeTax: 0, employerNi: 0, dividend: 5000, dividendTax: 0},
+//     '22': {salary: 0, ni: 0, incomeTax: 0, employerNi: 0, dividend: 10000, dividendTax: 0},
+//     '23': {salary: 0, ni: 0, incomeTax: 0, employerNi: 0, dividend: 30000, dividendTax: 1211},
+//     '24': {salary: 0, ni: 0, incomeTax: 0, employerNi: 0, dividend: 50000, dividendTax: 3624},
+//     '25': {salary: 0, ni: 0, incomeTax: 0, employerNi: 0, dividend: 100000, dividendTax: 19874},
+//     '26': {salary: 0, ni: 0, incomeTax: 0, employerNi: 0, dividend: 200000, dividendTax: 59025},
 //
-// your Income Tax is	£6,898.20
-// your National Insurance is	£4,551.12
-// in total you pay	£11,449.32
-
-// 150_000
-// Your estimated take-home pay for 2018 to 2019 is
+//     '31': {salary: 5000, ni: 0, incomeTax: 0, employerNi: 0, dividend: 10000, dividendTax: 86},
+//     '32': {salary: 5000, ni: 0, incomeTax: 0, employerNi: 0, dividend: 30000, dividendTax: 1586},
+//     '33': {salary: 8424, ni: 0, incomeTax: 0, employerNi: 0, dividend: 30000, dividendTax: 1843},
+//     '34': {salary: 8424, ni: 0, incomeTax: 0, employerNi: 0, dividend: 100000, dividendTax: 23922},
+//     '35': {salary: 8424, ni: 0, incomeTax: 0, employerNi: 0, dividend: 200000, dividendTax: 61603},
 //
-// £90,275.88 a year
+//     '36': {salary: 15000, ni: 789.12, incomeTax: 630, employerNi: 907.49, dividend: 50000, dividendTax: 8263},
+//     '44': {salary: 46350, ni: 4551.12, incomeTax: 6900, employerNi: 5233.79, dividend: 50000, dividendTax: 15600},
+//     '45': {salary: 80000, ni: 5227.52, incomeTax: 20360, employerNi: 9877.49, dividend: 50000, dividendTax: 15600},
+//     '46': {salary: 150000, ni: 6627.52, incomeTax: 53100, employerNi: 19537.49, dividend: 50000, dividendTax: 19050},
+//     '47': {salary: 200000, ni: 7627.52, incomeTax: 75600, employerNi: 26437.49, dividend: 50000, dividendTax: 38100},
+// })) {
+//     const actualNi = calcSalaryNI(v.salary);
+//     test(actualNi === v.ni,
+//         "TEST id=" + k + " - NI formula          - salary=" + v.salary + ", expected=" + v.ni + ", actual=" + actualNi);
 //
-// Based on the information you’ve given us:
+//     const actualIncomeTax = calcIncomeTax(v.salary, v.dividend);
+//     test(actualIncomeTax.totalTax === v.incomeTax,
+//         "TEST id=" + k + " - incomeTax formula   - salary=" + v.salary + ", dividend=" + v.dividend + ", expected=" + v.incomeTax + ", actual=" + actualIncomeTax.totalTax +
+//         ', FullResponse=' + JSON.stringify(actualIncomeTax));
 //
-//     your Income Tax is	£53,100
-// your National Insurance is	£6,624.12
-// in total you pay	£59,724.12
+//     const employerNi = calcEmployerNI(v.salary);
+//     test(employerNi === v.employerNi,
+//         "TEST id=" + k + " - employerNi formula  - salary=" + v.salary + ", expected=" + v.employerNi + ", actual=" + employerNi);
+//
+//     const dividendTax = calcSalaryAndDividendsTax(v.salary, v.dividend);
+//     test(dividendTax.totalTax === v.dividendTax,
+//         "TEST id=" + k + " - dividendTax formula - salary=" + v.salary + ", dividend=" + v.dividend + ", expected=" + v.dividendTax + ", actual=" + dividendTax.totalTax +
+//         ', FullResponse=' + JSON.stringify(dividendTax));
+// }
 
 // for sync tests
 function test(condition, message) {
     try {
         console.assert.apply(console, arguments);
         if (typeof message === 'string' && condition) {
-            console.log('\u2714 ' + message);
+            // console.log('\u2714 ' + message);
         }
     } catch (error) {
         test.exitCode = 1;
@@ -289,7 +326,7 @@ function test(condition, message) {
 
 // for async tests
 test.async = function (fn, timeout) {
-    var timer = setTimeout(
+    let timer = setTimeout(
         function () {
             test(false, 'timeout ' + fn);
         },
