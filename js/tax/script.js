@@ -113,13 +113,13 @@ const calculator = new Vue({
             return calcStudentLoanRepayment(this.salary , 1);
         },
         salaryAfterTax: function () {
-            return this.salary - calcIncomeTax(this.salary) - calcSalaryNI(this.salary);
+            return this.salary - calcIncomeTax(this.salary).totalTax - calcSalaryNI(this.salary);
         },
         dividends: function () {
             return this.perYearNet;
         },
         dividendsTax: function () {
-            return calcIncomeTax(this.salary, this.dividends).dividends.totalTax;
+            return calcSalaryAndDividendsTax(this.salary, this.dividends).totalTax;
         },
         dividendsTaxed: function () {
             return this.dividends - this.dividendsTax;
