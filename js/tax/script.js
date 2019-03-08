@@ -4,6 +4,7 @@ var data = {
     dayRate: 600,
     dayExpense: 16,
     monthExpense: 175,
+    yearExpense: 0,
     weeksWorked: 48,
     year: "1819",
 //    dividends: 10000,
@@ -89,7 +90,7 @@ const calculator = new Vue({
     data: data,
     computed: {
         yearlyExpense: function () {
-            return (this.dayExpense * this.weeksWorked * 5) + (this.monthExpense * 12);
+            return (this.dayExpense * this.weeksWorked * 5) + (this.monthExpense * 12) + this.yearExpense;
         },
         yearlyIncome: function () {
             return this.weeksWorked * this.dayRate * 5

@@ -26,6 +26,11 @@
             <input type="range" min="0" max="1000" step="1" class="currency slider" v-model.number="monthExpense">
             <br/>
 
+            <label for="year-expense">Yearly Expense</label>
+            <input id="year-expense" type="number" name="year-expense" class="currency" v-model.number="yearExpense"/>
+            <input type="range" min="0" max="100000" step="10" class="currency slider" v-model.number="yearExpense">
+            <br/>
+
             <label for="dividends">Dividends</label>
             <input id="dividends" type="number" name="dividends" class="currency" v-model.number="dividends"/>
             <input type="range" min="0" max="200000" step="1000" class="currency slider" v-model.number="dividends">
