@@ -89,7 +89,7 @@ const calculator = new Vue({
     data: data,
     computed: {
         yearlyExpense: function () {
-            return (this.dayExpense * this.weeksWorked * 5) + (this.monthExpense * 12) + this.salary;
+            return (this.dayExpense * this.weeksWorked * 5) + (this.monthExpense * 12);
         },
         yearlyIncome: function () {
             return this.weeksWorked * this.dayRate * 5
@@ -98,7 +98,7 @@ const calculator = new Vue({
             return this.yearlyIncome;
         },
         perYearNet: function () {
-            return (this.yearlyIncome - this.yearlyExpense) * (1 - taxValues.corpTax);
+            return (this.yearlyIncome - this.yearlyExpense - this.salary) * (1 - taxValues.corpTax);
         },
         salaryTax: function () {
             return calcIncomeTax(this.salary).totalTax;
