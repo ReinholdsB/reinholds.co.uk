@@ -1,8 +1,8 @@
 'use strict';
 
 var data = {
-    dayRate: 600,
-    dayExpense: 16,
+    dayRate: 300,
+    dayExpense: 10,
     monthExpense: 175,
     yearExpense: 0,
     weeksWorked: 48,
