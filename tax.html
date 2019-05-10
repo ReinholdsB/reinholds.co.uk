@@ -20,40 +20,67 @@
             <h1>The Tax-culator</h1>
             <p>Calculate your taxes and income</p>
 
-            <label for="day-rate">Daily Rate</label>
-            <input id="day-rate" type="number" name="dayRate" class="currency" v-model.number="dayRate"/>
-            <input type="range" min="100" max="1000" step="10" class="currency slider" v-model.number="dayRate">
-            <br/>
-
-            <label for="weeks-worked">Weeks worked</label>
-            <input id="weeks-worked" type="number" name="weeks-worked" class="currency" v-model.number="weeksWorked"/>
-            <input type="range" min="0" max="52" step="1" class="currency slider" v-model.number="weeksWorked">
-
-            <label for="day-expense">Daily Expense</label>
-            <input id="day-expense" type="number" name="day-expense" class="currency" v-model.number="dayExpense"/>
-            <input type="range" min="0" max="100" step="1" class="currency slider" v-model.number="dayExpense">
-            <br/>
-
-            <label for="month-expense">Monthly Expense</label>
-            <input id="month-expense" type="number" name="month-expense" class="currency"
-                   v-model.number="monthExpense"/>
-            <input type="range" min="0" max="1000" step="1" class="currency slider" v-model.number="monthExpense">
-            <br/>
-
-            <label for="year-expense">Yearly Expense</label>
-            <input id="year-expense" type="number" name="year-expense" class="currency" v-model.number="yearExpense"/>
-            <input type="range" min="0" max="100000" step="10" class="currency slider" v-model.number="yearExpense">
-            <br/>
-
-            <label for="dividends">Dividends</label>
-            <input id="dividends" type="number" name="dividends" class="currency" v-model.number="dividends"/>
-            <input type="range" min="0" max="200000" step="1000" class="currency slider" v-model.number="dividends">
-            <br/>
-
-            <label for="salary">Salary</label>
-            <input id="salary" type="number" name="salary" class="currency" v-model.number="salary"/>
-            <input type="range" min="0" max="200000" step="10" class="currency slider" v-model.number="salary">
-            <br/>
+            <table>
+                <tr>
+                    <td>
+                        <label for="day-rate">Daily Rate</label>
+                        <input id="day-rate" type="number" name="dayRate" class="currency" v-model.number="dayRate"/>
+                        <input type="range" min="100" max="1000" step="10" class="currency slider"
+                               v-model.number="dayRate">
+                    </td>
+                    <td>
+                        <label for="weeks-worked">Weeks worked</label>
+                        <input id="weeks-worked" type="number" name="weeks-worked" class="currency"
+                               v-model.number="weeksWorked"/>
+                        <input type="range" min="0" max="52" step="1" class="currency slider"
+                               v-model.number="weeksWorked">
+                    </td>
+                </tr>
+            </table>
+            <h3>Expenses</h3>
+            <table>
+                <tr>
+                    <td>
+                        <label for="day-expense">Daily</label>
+                        <input id="day-expense" type="number" name="day-expense" class="currency"
+                               v-model.number="dayExpense"/>
+                        <input type="range" min="0" max="100" step="1" class="currency slider"
+                               v-model.number="dayExpense">
+                    </td>
+                    <td>
+                        <label for="month-expense">Monthly</label>
+                        <input id="month-expense" type="number" name="month-expense" class="currency"
+                               v-model.number="monthExpense"/>
+                        <input type="range" min="0" max="1000" step="1" class="currency slider"
+                               v-model.number="monthExpense">
+                    </td>
+                    <td>
+                        <label for="year-expense">Yearly</label>
+                        <input id="year-expense" type="number" name="year-expense" class="currency"
+                               v-model.number="yearExpense"/>
+                        <input type="range" min="0" max="100000" step="10" class="currency slider"
+                               v-model.number="yearExpense">
+                    </td>
+                </tr>
+            </table>
+            <h3>Split</h3>
+            <table>
+                <tr>
+                    <td>
+                        <label for="dividends">Dividends</label>
+                        <input id="dividends" type="number" name="dividends" class="currency"
+                               v-model.number="dividends"/>
+                        <input type="range" min="0" max="200000" step="1000" class="currency slider"
+                               v-model.number="dividends" disabled>
+                    </td>
+                    <td>
+                        <label for="salary">Salary</label>
+                        <input id="salary" type="number" name="salary" class="currency" v-model.number="salary"/>
+                        <input type="range" min="0" max="200000" step="10" class="currency slider"
+                               v-model.number="salary">
+                    </td>
+                </tr>
+            </table>
 
             <!--<label for="year">Year</label>-->
             <!--<select <label id="year">Year</label>  name="year" v-model="year">-->
@@ -85,9 +112,9 @@
                     <div class="payment">Dividends: &pound;{{ numFormat(dividends/scale) }}</div>
                     <div class="payment">Income Before Tax: &pound;{{ numFormat(incomeBeforeTax/scale) }}</div>
                     <br/>
-                    <div class="payment">Salary Tax: - &pound;{{ numFormat(salaryTax/scale) }}</div>
-                    <div class="payment">Salary NI: - &pound;{{ numFormat(salaryNI/scale) }}</div>
-                    <div class="payment">Dividends Tax: - &pound;{{ numFormat(dividendsTax/scale) }}</div>
+                    <div class="payment">Salary Tax: &pound;{{ numFormat(salaryTax/scale) }}</div>
+                    <div class="payment">Salary NI: &pound;{{ numFormat(salaryNI/scale) }}</div>
+                    <div class="payment">Dividends Tax: &pound;{{ numFormat(dividendsTax/scale) }}</div>
                     <br/>
                     <div class="payment">Salary After Tax: &pound;{{ numFormat(salaryAfterTax/scale) }}</div>
                     <div class="payment">Dividends Taxed: &pound;{{ numFormat(dividendsTaxed/scale) }}</div>

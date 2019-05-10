@@ -6,7 +6,7 @@ var data = {
     monthExpense: 175,
     yearExpense: 0,
     weeksWorked: 48,
-    year: "1819",
+    year: "1920",
 //    dividends: 10000,
     salary: 8424,
     scale: 1
@@ -18,6 +18,74 @@ var taxValues = {
 };
 
 const TAX = {
+    year: '2019/20',
+    allowance: {
+        basic: 12500,
+        age_65_74: 12500,
+        age_75_over: 12500,
+        blind: 2320,
+        thresholds: {
+            age: 27700,
+            taper: 100000
+        }
+    },
+    income: {
+        basic: {
+            till: 37500,
+            rate: 0.20,
+        },
+        higher: {
+            till: 150000,
+            rate: 0.40,
+        },
+        additional: {
+            start: 150000,
+            till: -1,
+            rate: 0.45,
+        }
+    },
+    dividend: {
+        allowance: 2000,
+        basic: 0.075,
+        higher: 0.325,
+        additional: 0.381
+    },
+    natInsurance: {
+        pensionAge: 65,
+        rate_0: {
+            start: 0,
+            till: 166 * 52,
+            rate: 0,
+        },
+        rate_12: {
+            start: 166 * 52,
+            till: 961.54 * 52,
+            rate: 0.12,
+        },
+        rate_2: {
+            start: 961.54 * 52,
+            till: -1,
+            rate: 0.02,
+        },
+        rate_employer: {
+            start: 166.00 * 52,
+            till: -1,
+            rate: 0.138,
+        }
+    },
+    studentLoan: {
+        plan_1: {
+            threshold: 18330,
+            rate: 0.09,
+        },
+        plan_2: {
+            threshold: 25000,
+            rate: 0.09,
+        }
+    }
+};
+
+const TAX_1819 = {
     year: '2018/19',
     allowance: {
         basic: 11850,
