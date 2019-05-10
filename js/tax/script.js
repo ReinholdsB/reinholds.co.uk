@@ -8,7 +8,7 @@ var data = {
     weeksWorked: 48,
     year: "1920",
 //    dividends: 10000,
-    salary: 8424,
+    salary: 8632,
     scale: 1
 };
 
