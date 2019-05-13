@@ -1,6 +1,6 @@
 'use strict';
 
-var data = {
+var formData = {
     dayRate: 300,
     dayExpense: 10,
     monthExpense: 175,
@@ -54,16 +54,16 @@ const TAX = {
         pensionAge: 65,
         rate_0: {
             start: 0,
-            till: 166 * 52,
+            till: 8632,
             rate: 0,
         },
         rate_12: {
-            start: 166 * 52,
-            till: 961.54 * 52,
+            start: 8632,
+            till: 50000,
             rate: 0.12,
         },
         rate_2: {
-            start: 961.54 * 52,
+            start: 50000,
             till: -1,
             rate: 0.02,
         },
@@ -155,7 +155,12 @@ const TAX_1819 = {
 
 const calculator = new Vue({
     el: '#calculator',
-    data: data,
+    data: formData,
+    mounted() {
+        if (localStorage.getItem('dayRate')) {
+            this.dayRate = localStorage.getItem('dayRate');
+        }
+    },
     computed: {
         yearlyExpense: function () {
             return (this.dayExpense * this.weeksWorked * 5) + (this.monthExpense * 12) + this.yearExpense;
@@ -204,6 +209,12 @@ const calculator = new Vue({
         //https://blog.tompawlak.org/number-currency-formatting-javascript
         numFormat: function (e) {
             return e.toFixed(0).replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
+        },
+        resetDayRate() {
+            localStorage.removeItem('dayRate');
+        },
+        saveDayRate() {
+            localStorage.setItem('dayRate', this.dayRate);
         }
     }
 });

@@ -36,7 +36,16 @@
                                v-model.number="weeksWorked">
                     </td>
                 </tr>
+                <tr>
+                    <td>
+                        <button @click="saveDayRate">Save</button>
+                        <button @click="resetDayRate">Reset</button>
+                    </td>
+                    <td>
+                    </td>
+                </tr>
             </table>
+
             <h3>Expenses</h3>
             <table>
                 <tr>
