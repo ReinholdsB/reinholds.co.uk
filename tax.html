@@ -106,32 +106,53 @@
             <option value="365">Daily</option>
         </select>
 
-        <table>
-            <tr>
-                <td>
-                    <div class="payment">Company</div>
-                    <div class="payment">Income: &pound;{{ numFormat(perYear/scale) }}</div>
-                    <div class="payment">Net: &pound;{{ numFormat(perYearNet/scale) }}</div>
-                    <div class="payment">Expenses: &pound;{{ numFormat(yearlyExpense/scale) }}</div>
-                    <div class="payment">employerNI: &pound;{{ numFormat(employerNI/scale) }}</div>
-                </td>
-                <td>
-                    <div class="payment">Personal</div>
-                    <div class="payment">Salary: &pound;{{ numFormat(salary/scale) }}</div>
-                    <div class="payment">Dividends: &pound;{{ numFormat(dividends/scale) }}</div>
-                    <div class="payment">Income Before Tax: &pound;{{ numFormat(incomeBeforeTax/scale) }}</div>
-                    <br/>
-                    <div class="payment">Salary Tax: &pound;{{ numFormat(salaryTax/scale) }}</div>
-                    <div class="payment">Salary NI: &pound;{{ numFormat(salaryNI/scale) }}</div>
-                    <div class="payment">Dividends Tax: &pound;{{ numFormat(dividendsTax/scale) }}</div>
-                    <br/>
-                    <div class="payment">Salary After Tax: &pound;{{ numFormat(salaryAfterTax/scale) }}</div>
-                    <div class="payment">Dividends Taxed: &pound;{{ numFormat(dividendsTaxed/scale) }}</div>
-                    <div class="payment">Income After Tax: &pound;{{ numFormat(incomeAfterTax/scale) }}</div>
+        <div class="grid-container">
+            <div class="sub-grid-container">
+                <div class="box box2">Company</div>
 
-                </td>
-            </tr>
-        </table>
+                <div class="box ">Income:</div>
+                <div class="box ">&pound;{{ numFormat(perYear/scale) }}</div>
+                <div class="box ">Net:</div>
+                <div class="box ">&pound;{{ numFormat(perYearNet/scale) }}</div>
+
+                <div class="box ">Expenses:</div>
+                <div class="box ">&pound;{{ numFormat(yearlyExpense/scale) }}</div>
+
+                <div class="box ">employerNI:</div>
+                <div class="box ">&pound;{{ numFormat(employerNI/scale) }}</div>
+            </div>
+            <div class="sub-grid-container">
+                <div class="box box2">Personal</div>
+
+
+                <div class="box">Salary:</div>
+                <div class="box">&pound;{{ numFormat(salary/scale) }}</div>
+
+                <div class="box">Dividends:</div>
+                <div class="box">&pound;{{ numFormat(dividends/scale) }}</div>
+
+                <div class="box">Income Before Tax:</div>
+                <div class="box">&pound;{{ numFormat(incomeBeforeTax/scale) }}</div>
+
+                <div class="box">Salary Tax:</div>
+                <div class="box">&pound;{{ numFormat(salaryTax/scale) }}</div>
+
+                <div class="box">Salary NI: </div>
+                <div class="box"> &pound;{{ numFormat(salaryNI/scale) }}</div>
+
+                <div class="box">Dividends Tax:</div>
+                <div class="box">&pound;{{ numFormat(dividendsTax/scale) }}</div>
+
+                <div class="box">Salary After Tax: </div>
+                <div class="box">&pound;{{ numFormat(salaryAfterTax/scale) }}</div>
+
+                <div class="box">Dividends Taxed: </div>
+                <div class="box">&pound;{{ numFormat(dividendsTaxed/scale) }}</div>
+
+                <div class="box">Income After Tax: </div>
+                <div class="box">&pound;{{ numFormat(incomeAfterTax/scale) }}</div>
+            </div>
+        </div>
     </div>
 </div>
 <script src="js/tax/script.js"></script>
