@@ -40,7 +40,7 @@
 
             <h3>Expenses</h3>
 
-            <div class="grid-container-three">
+            <div class="grid-container">
                 <div>
                     <label for="day-expense">Daily</label>
                     <input id="day-expense" type="number" name="day-expense" class="currency"
@@ -65,7 +65,7 @@
             </div>
             <h3>Split</h3>
 
-            <div class="grid-container-three">
+            <div class="grid-container">
                 <div>
                     <label for="dividends">Dividends</label>
                     <input id="dividends" type="number" name="dividends" class="currency"
@@ -98,7 +98,7 @@
         </form>
 
 
-        <div class="grid-container">
+        <div class="sub-grid-container">
             <div class="sub-grid-container">
                 <div class="box box2">Company</div>
 
@@ -126,6 +126,8 @@
                 <div class="box">Income Before Tax:</div>
                 <div class="box">&pound;{{ numFormat(incomeBeforeTax/scale) }}</div>
 
+                <div></div>
+                <div></div>
                 <div class="box">Salary Tax:</div>
                 <div class="box">&pound;{{ numFormat(salaryTax/scale) }}</div>
 
@@ -138,6 +140,8 @@
                 <div class="box">Salary After Tax:</div>
                 <div class="box">&pound;{{ numFormat(salaryAfterTax/scale) }}</div>
 
+                <div></div>
+                <div></div>
                 <div class="box">Dividends Taxed:</div>
                 <div class="box">&pound;{{ numFormat(dividendsTaxed/scale) }}</div>
 
