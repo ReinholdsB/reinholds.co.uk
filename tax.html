@@ -1,4 +1,4 @@
-<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vue@2.6.10/dist/vue.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/2.0.2/TweenMax.min.js"></script>
 
 <head>
@@ -24,7 +24,7 @@
                 <div>
                     <label for="day-rate">Daily Rate</label>
                     <input id="day-rate" type="number" name="dayRate" class="currency" v-model.number="dayRate"/>
-                    <input type="range" min="100" max="1000" step="10" class="currency slider"
+                    <input type="range" min="100" max="1000" step="50" class="currency slider"
                            v-model.number="dayRate">
                     <button @click="saveDayRate">Save</button>
                     <button @click="resetDayRate">Reset</button>
@@ -68,7 +68,7 @@
             <div class="grid-container">
                 <div>
                     <label for="dividends">Dividends</label>
-                    <input id="dividends" type="number" name="dividends" class="currency"
+                    <input id="dividends" name="dividends" class="currency"
                            v-model.number="dividends"/>
                     <input type="range" min="0" max="200000" step="1000" class="currency slider"
                            v-model.number="dividends" disabled>
@@ -82,10 +82,9 @@
                 <div>
                     <label for="scale">Period</label>
                     <select id="scale" name="scale" v-model="scale">
-                        <option value="1" selected>Yearly</option>
-                        <option value="12">Monthly</option>
-                        <option value="52">Weekly</option>
-                        <option value="365">Daily</option>
+                        <option v-for="option in options" v-bind:value="option.value">
+                            {{ option.text }}
+                        </option>
                     </select>
                 </div>
             </div>
@@ -105,14 +104,15 @@
                 <div class="box">Income:</div>
                 <div class="box">&pound;{{ numFormat(perYear/scale) }}</div>
 
-                <div class="box">Net:</div>
-                <div class="box">&pound;{{ numFormat(perYearNet/scale) }}</div>
-
                 <div class="box">Expenses:</div>
-                <div class="box">&pound;{{ numFormat(yearlyExpense/scale) }}</div>
+                <div class="box negative">&pound;{{ numFormat(yearlyExpense/scale) }}</div>
 
                 <div class="box">Employer NI:</div>
-                <div class="box">&pound;{{ numFormat(employerNI/scale) }}</div>
+                <div class="box negative">&pound;{{ numFormat(employerNI/scale) }}</div>
+
+                <div class="box total">Net:</div>
+                <div class="box total">&pound;{{ numFormat(perYearNet/scale) }}</div>
+
             </div>
             <div class="sub-grid-container">
                 <div class="box box2">Personal</div>
@@ -129,24 +129,26 @@
                 <div></div>
                 <div></div>
                 <div class="box">Salary Tax:</div>
-                <div class="box">&pound;{{ numFormat(salaryTax/scale) }}</div>
+                <div class="box negative">&pound;{{ numFormat(salaryTax/scale) }}</div>
 
                 <div class="box">Salary NI:</div>
-                <div class="box">&pound;{{ numFormat(salaryNI/scale) }}</div>
+                <div class="box negative">&pound;{{ numFormat(salaryNI/scale) }}</div>
 
                 <div class="box">Dividends Tax:</div>
-                <div class="box">&pound;{{ numFormat(dividendsTax/scale) }}</div>
+                <div class="box negative">&pound;{{ numFormat(dividendsTax/scale) }}</div>
 
+                <div></div>
+                <div></div>
                 <div class="box">Salary After Tax:</div>
                 <div class="box">&pound;{{ numFormat(salaryAfterTax/scale) }}</div>
 
-                <div></div>
-                <div></div>
                 <div class="box">Dividends Taxed:</div>
                 <div class="box">&pound;{{ numFormat(dividendsTaxed/scale) }}</div>
 
-                <div class="box">Income After Tax:</div>
-                <div class="box">&pound;{{ numFormat(incomeAfterTax/scale) }}</div>
+                <div></div>
+                <div></div>
+                <div class="box total">Income After Tax:</div>
+                <div class="box total">&pound;{{ numFormat(incomeAfterTax/scale) }}</div>
             </div>
         </div>
     </div>

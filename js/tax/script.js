@@ -9,7 +9,13 @@ var formData = {
     year: "1920",
 //    dividends: 10000,
     salary: 8632,
-    scale: 1
+    scale: 1,
+    options: [
+        { text: 'Yearly', value: '1' },
+        { text: 'Monthly', value: '12' },
+        { text: 'Weekly', value: '52' },
+        { text: 'Daily', value: '365' }
+    ]
 };
 
 var taxValues = {

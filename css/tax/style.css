@@ -91,6 +91,14 @@ input:focus, select:focus {
   text-align: left;
 }
 
+.negative {
+  background-color: #ce8483;
+}
+
+.total {
+  font-weight: bold;
+}
+
 button {
   display: inline-block;
   background-color: #fff;
