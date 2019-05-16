@@ -24,7 +24,7 @@
                 <div>
                     <label for="day-rate">Daily Rate</label>
                     <input id="day-rate" type="number" name="dayRate" class="currency" v-model.number="dayRate"/>
-                    <input type="range" min="100" max="1000" step="50" class="currency slider"
+                    <input type="range" min="100" max="1000" step="25" class="currency slider"
                            v-model.number="dayRate">
                     <button @click="saveDayRate">Save</button>
                     <button @click="resetDayRate">Reset</button>
