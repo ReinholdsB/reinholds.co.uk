@@ -43,8 +43,8 @@ label {
 }
 
 input, select {
-  color: #888;
-  border: 1px solid #888;
+  color: #162c16;
+  border: 1px solid #162c16;
   border-radius: 2px;
   height: 1.5em;
   width: 100%;
@@ -102,8 +102,7 @@ input:focus, select:focus {
 button {
   display: inline-block;
   background-color: #fff;
-  color: #888;
-  border: 2px solid #888;
+  border: 2px solid #162c16;
   border-radius: 2px;
   height: 1.5em;
   font-size: 1em;
@@ -135,7 +134,8 @@ input[type=number]::-webkit-outer-spin-button {
 .slider {
   -webkit-appearance: none;
   width: 100%;
-  height: 0;
+  height: 5px;
+  margin: 0 0 10px 0;
   border-radius: 3px;
   background: #d3d3d3;
   outline: none;
