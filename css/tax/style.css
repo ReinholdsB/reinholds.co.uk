@@ -110,10 +110,6 @@ button {
   margin-bottom: 0.5em;
 }
 
-.hidden{
-  display: none;
-}
-
 button:focus {
   background-color: #fff;
   color: #3200ff;
