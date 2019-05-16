@@ -177,6 +177,9 @@ const calculator = new Vue({
         perYear: function () {
             return this.yearlyIncome;
         },
+        corpTax: function () {
+            return (this.yearlyIncome - this.yearlyExpense - this.salary) * (taxValues.corpTax);
+        },
         perYearNet: function () {
             return (this.yearlyIncome - this.yearlyExpense - this.salary) * (1 - taxValues.corpTax);
         },
