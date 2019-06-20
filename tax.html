@@ -83,6 +83,7 @@
                     <input id="salary" type="number" name="salary" class="currency" v-model.number="salary"/>
                     <input id="salary-range" type="range" min="0" max="200000" step="10" class="currency slider"
                            v-model.number="salary">
+                    <button @click="resetSalary">Reset</button>
                 </div>
                 <div>
                     <label for="scale">- Period</label>

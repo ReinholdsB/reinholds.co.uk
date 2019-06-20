@@ -1,13 +1,13 @@
 'use strict';
 
-var formData = {
+let formData = {
     dayRate: 300,
     dayExpense: 10,
     monthExpense: 175,
     yearExpense: 0,
     weeksWorked: 48,
     year: "1920",
-//    dividends: 10000,
+    dividends: 0,
     salary: 8632,
     scale: 1,
     options: [
@@ -18,7 +18,7 @@ var formData = {
     ]
 };
 
-var taxValues = {
+let taxValues = {
     vat: 0.2,
     corpTax: 0.19
 };
