@@ -1,0 +1,59 @@
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Tax Calculator for Contractors working through a limited company in UK.">
+    <meta name="author" content="Reinholds Bunde">
+
+    <title>Contractor Tax Calculator UK</title>
+
+    <link rel="icon" href="/img/favicon.ico">
+</head>
+
+<body>
+<div id="calculator">
+    <div class="container">
+        <form action="">
+            <!--<h1>The Tax game</h1>-->
+            <!--<p>Calculate your taxes and income</p>-->
+            <div class="sub-grid-container">
+                <div>
+                    <label>Money</label>
+                    <div class="box">&pound;{{ roundMoney(money) }}</div>
+                </div>
+            </div>
+            <br/>
+            <br/>
+            <div>
+                <label>Workers</label>
+                <div class="box">{{ workers }}</div>
+            </div>
+            <div>
+                <label>Factories</label>
+                <div class="box">{{ factories }}</div>
+            </div>
+            <div>
+                <label>Sweatshop</label>
+                <div class="box">{{ sweatshop }}</div>
+            </div>
+        </form>
+    </div>
+    <button @click="addOneMoney">Add One M (+1 M)</button>
+    <button @click="addOneWorker">Add One W (-{{config.workers.cost + (config.workers.cost/10 * workers)}} M,
+        {{config.workers.perSecond}} M/sec)
+    </button>
+    <button @click="addOneFactory">Add One F (-{{config.factories.cost + (config.factories.cost/10 * factories)}} M,
+        {{config.factories.perSecond}} M/sec)
+    </button>
+    <button @click="addOneSweatshop">Add One S (-{{config.sweatshop.cost + (config.sweatshop.cost/10 * sweatshop)}} M,
+        {{config.sweatshop.perSecond}} M/sec)
+    </button>
+    <button @click="resetApp">Reset App</button>
+</div>
+<script src="js/tax/vue.min.js"></script>
+<script src="js/game/script.js"></script>
+<link rel="stylesheet" type="text/css" href="css/game/style.css">
+</body>
+</html>
+
