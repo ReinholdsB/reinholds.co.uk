@@ -1,6 +1,6 @@
 'use strict';
 
-var formData = {
+let formData = {
     dayRate: 300,
     dayExpense: 10,
     monthExpense: 175,
@@ -11,14 +11,16 @@ var formData = {
     salary: 8632,
     scale: 1,
     options: [
-        { text: 'Yearly', value: '1' },
-        { text: 'Monthly', value: '12' },
-        { text: 'Weekly', value: '52' },
-        { text: 'Daily', value: '365' }
-    ]
+        {text: 'Yearly', value: '1'},
+        {text: 'Monthly', value: '12'},
+        {text: 'Weekly', value: '52'},
+        {text: 'Daily', value: '365'}
+    ],
+    chartData: [],
+    chartDataTemp: [],
 };
 
-var taxValues = {
+const taxValues = {
     vat: 0.2,
     corpTax: 0.19
 };
@@ -166,6 +168,9 @@ const calculator = new Vue({
         if (localStorage.getItem('dayRate')) {
             this.dayRate = localStorage.getItem('dayRate');
         }
+        setInterval(() => {
+            this.refreshChart();
+        }, 100);
     },
     computed: {
         yearlyExpense: function () {
@@ -193,10 +198,11 @@ const calculator = new Vue({
             return calcSalaryNI(this.salary);
         },
         studentLoanContribution: function () {
-            return calcStudentLoanRepayment(this.salary , 1);
+            return calcStudentLoanRepayment(this.salary, 1);
         },
         salaryAfterTax: function () {
-            return this.salary - calcIncomeTax(this.salary).totalTax - calcSalaryNI(this.salary);
+            const tax = calcIncomeTax(this.salary).totalTax + calcSalaryNI(this.salary);
+            return this.salary - tax;
         },
         dividends: function () {
             return this.perYearNet;
@@ -227,6 +233,66 @@ const calculator = new Vue({
         },
         resetSalary() {
             localStorage.removeItem('salary');
+        },
+        refreshChart() {
+            this.chartDataTemp = [
+                this.yearlyExpense,
+                this.salaryTax,
+                this.corpTax,
+                this.dividendsTax,
+                this.salaryAfterTax,
+                this.dividendsTaxed ,
+            ];
+            if (JSON.stringify(this.chartData) !== JSON.stringify(this.chartDataTemp)) {
+                this.chartData = this.chartDataTemp;
+                const ctx = document.getElementById('myChart');
+                if(this.chart != null) {
+                    this.chart.destroy();
+                }
+                this.chart = new Chart(ctx, {
+                    type: 'pie',
+                    data: {
+                        labels: [
+                            'Expenses',
+                            'Tax - Salary',
+                            'Tax - Corporation',
+                            'Tax - Dividends',
+                            'Net - Salary',
+                            'Net - Dividends' ,
+                        ],
+                        datasets: [{
+                            label: 'tax vs salary vs dividends',
+                            data: this.chartData,
+                            backgroundColor: [
+                                'rgba(255, 99, 132, 0.2)',
+                                'rgba(255, 159, 64, 0.2)',
+                                'rgba(255, 206, 86, 0.2)',
+                                'rgba(235,106,74,0.2)',
+                                'rgba(21,192,147,0.2)',
+                                'rgba(93,255,76,0.2)'
+                            ],
+                            borderColor: [
+                                'rgba(255, 99, 132, 1)',
+                                'rgba(255, 159, 64, 1)',
+                                'rgba(255, 206, 86, 1)',
+                                'rgb(235,76,48)',
+                                'rgb(49,192,123)',
+                                'rgb(48,255,93)'
+                            ],
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        scales: {
+                            yAxes: [{
+                                ticks: {
+                                    beginAtZero: true
+                                }
+                            }]
+                        }
+                    }
+                });
+            }
         }
     }
 });
