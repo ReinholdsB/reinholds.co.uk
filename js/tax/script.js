@@ -241,12 +241,17 @@ const calculator = new Vue({
                 this.corpTax,
                 this.dividendsTax,
                 this.salaryAfterTax,
-                this.dividendsTaxed ,
+                this.dividendsTaxed,
             ];
             if (JSON.stringify(this.chartData) !== JSON.stringify(this.chartDataTemp)) {
+                let total = this.yearlyExpense + this.salaryTax + this.corpTax + this.dividendsTax +this.salaryAfterTax + this.dividendsTaxed;
                 this.chartData = this.chartDataTemp;
+                this.chartData2 = [
+                    Math.round((this.yearlyExpense + this.salaryTax + this.corpTax + this.dividendsTax)/total * 100) / 100,
+                    Math.round((this.salaryAfterTax + this.dividendsTaxed)/total * 100) / 100,
+                ];
                 const ctx = document.getElementById('myChart');
-                if(this.chart != null) {
+                if (this.chart != null) {
                     this.chart.destroy();
                 }
                 this.chart = new Chart(ctx, {
@@ -258,7 +263,7 @@ const calculator = new Vue({
                             'Tax - Corporation',
                             'Tax - Dividends',
                             'Net - Salary',
-                            'Net - Dividends' ,
+                            'Net - Dividends',
                         ],
                         datasets: [{
                             label: 'tax vs salary vs dividends',
@@ -268,7 +273,7 @@ const calculator = new Vue({
                                 'rgba(255, 159, 64, 0.2)',
                                 'rgba(255, 206, 86, 0.2)',
                                 'rgba(235,106,74,0.2)',
-                                'rgba(21,192,147,0.2)',
+                                'rgba(49,192,123,0.2)',
                                 'rgba(93,255,76,0.2)'
                             ],
                             borderColor: [
@@ -280,7 +285,20 @@ const calculator = new Vue({
                                 'rgb(48,255,93)'
                             ],
                             borderWidth: 1
-                        }]
+                        },
+                            {
+                                label: 'tax vs salary vs dividends',
+                                data: this.chartData2,
+                                backgroundColor: [
+                                    'rgba(255, 99, 132, 0.2)',
+                                    'rgba(93,255,76,0.2)'
+                                ],
+                                borderColor: [
+                                    'rgba(255, 99, 132, 1)',
+                                    'rgb(48,255,93)'
+                                ],
+                                borderWidth: 1
+                            }]
                     },
                     options: {
                         scales: {
