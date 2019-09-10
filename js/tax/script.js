@@ -1,14 +1,17 @@
 'use strict';
 
+const defaultDayRate = 300;
+const defaultSalary = 8632;
+
 let formData = {
-    dayRate: 300,
+    dayRate: defaultDayRate,
     dayExpense: 10,
     monthExpense: 175,
     yearExpense: 0,
     weeksWorked: 48,
     year: "1920",
 //    dividends: 10000,
-    salary: 8632,
+    salary: defaultSalary,
     scale: 1,
     options: [
         {text: 'Yearly', value: '1'},
@@ -170,7 +173,7 @@ const calculator = new Vue({
         }
         setInterval(() => {
             this.refreshChart();
-        }, 100);
+        }, 50);
     },
     computed: {
         yearlyExpense: function () {
@@ -227,28 +230,34 @@ const calculator = new Vue({
         },
         resetDayRate() {
             localStorage.removeItem('dayRate');
+            this.dayRate = defaultDayRate
         },
         saveDayRate() {
             localStorage.setItem('dayRate', this.dayRate);
         },
         resetSalary() {
             localStorage.removeItem('salary');
+            this.salary = defaultSalary
         },
         refreshChart() {
             this.chartDataTemp = [
+                0,
+                0,
                 this.yearlyExpense,
+                this.employerNI,
                 this.salaryTax,
                 this.corpTax,
                 this.dividendsTax,
+                this.salaryNI,
                 this.salaryAfterTax,
                 this.dividendsTaxed,
             ];
             if (JSON.stringify(this.chartData) !== JSON.stringify(this.chartDataTemp)) {
-                let total = this.yearlyExpense + this.salaryTax + this.corpTax + this.dividendsTax +this.salaryAfterTax + this.dividendsTaxed;
+                let total = this.yearlyExpense + this.employerNI + this.salaryTax + this.corpTax + this.dividendsTax +this.salaryNI+ this.salaryAfterTax + this.dividendsTaxed;
                 this.chartData = this.chartDataTemp;
                 this.chartData2 = [
-                    Math.round((this.yearlyExpense + this.salaryTax + this.corpTax + this.dividendsTax)/total * 100) / 100,
-                    Math.round((this.salaryAfterTax + this.dividendsTaxed)/total * 100) / 100,
+                    Math.round((this.yearlyExpense + this.employerNI + this.salaryTax + this.corpTax + this.dividendsTax+this.salaryNI) / total * 100) / 100,
+                    Math.round((this.salaryAfterTax + this.dividendsTaxed) / total * 100) / 100,
                 ];
                 const ctx = document.getElementById('myChart');
                 if (this.chart != null) {
@@ -258,10 +267,14 @@ const calculator = new Vue({
                     type: 'pie',
                     data: {
                         labels: [
+                            'Tax',
+                            'Net',
                             'Expenses',
+                            'Tax - EmployerNI',
                             'Tax - Salary',
                             'Tax - Corporation',
                             'Tax - Dividends',
+                            'Tax - NI',
                             'Net - Salary',
                             'Net - Dividends',
                         ],
@@ -269,20 +282,28 @@ const calculator = new Vue({
                             label: 'tax vs salary vs dividends',
                             data: this.chartData,
                             backgroundColor: [
-                                'rgba(255, 99, 132, 0.2)',
+                                'rgba(255,58,95, 0.2)',
+                                'rgba(42,255,35, 0.2)',
+                                'rgba(255, 159, 45, 0.2)',
+                                'rgba(255, 159, 64, 0.2)',
                                 'rgba(255, 159, 64, 0.2)',
                                 'rgba(255, 206, 86, 0.2)',
                                 'rgba(235,106,74,0.2)',
+                                'rgba(255,45,45,0.2)',
                                 'rgba(49,192,123,0.2)',
-                                'rgba(93,255,76,0.2)'
+                                'rgba(60,255,188,0.2)'
                             ],
                             borderColor: [
-                                'rgba(255, 99, 132, 1)',
-                                'rgba(255, 159, 64, 1)',
-                                'rgba(255, 206, 86, 1)',
+                                'rgba(255,58,95)',
+                                'rgba(42,255,35)',
+                                'rgb(255,116,45)',
+                                'rgb(255,116,99)',
+                                'rgba(255, 159, 64)',
+                                'rgba(255, 206, 86)',
                                 'rgb(235,76,48)',
+                                'rgb(255,45,45)',
                                 'rgb(49,192,123)',
-                                'rgb(48,255,93)'
+                                'rgb(60,255,188)'
                             ],
                             borderWidth: 1
                         },
@@ -290,12 +311,12 @@ const calculator = new Vue({
                                 label: 'tax vs salary vs dividends',
                                 data: this.chartData2,
                                 backgroundColor: [
-                                    'rgba(255, 99, 132, 0.2)',
-                                    'rgba(93,255,76,0.2)'
+                                    'rgba(255,58,95, 0.2)',
+                                    'rgba(42,255,35,0.2)'
                                 ],
                                 borderColor: [
-                                    'rgba(255, 99, 132, 1)',
-                                    'rgb(48,255,93)'
+                                    'rgb(255,58,95)',
+                                    'rgb(42,255,35)'
                                 ],
                                 borderWidth: 1
                             }]
@@ -307,6 +328,9 @@ const calculator = new Vue({
                                     beginAtZero: true
                                 }
                             }]
+                        },
+                        animation: {
+                            animateRotate: false
                         }
                     }
                 });
