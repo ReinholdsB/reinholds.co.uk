@@ -14,7 +14,7 @@
 <body>
 <div id="calculator">
     <div class="container">
-        <form action="">
+        <div>
             <h1>The Tax-culator</h1>
             <p>Calculate your taxes and income</p>
 
@@ -100,8 +100,9 @@
             <!--<option value="1718">2017/2018</option>-->
             <!--<option value="1819" selected >2018/2019</option>-->
             <!--</select>-->
-        </form>
+        </div>
 
+        <canvas id="myChart" width="400" height="400"></canvas>
 
         <div class="sub-grid-container">
             <div class="sub-grid-container">
@@ -165,6 +166,7 @@
         </div>
     </div>
 </div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js" integrity="sha256-R4pqcOYV8lt7snxMQO/HSbVCFRPMdrhAFMH+vr9giYI=" crossorigin="anonymous"></script>
 <script src="js/tax/vue.min.js"></script>
 <script src="js/tax/script.js"></script>
 <link rel="stylesheet" type="text/css" href="css/tax/style.css">

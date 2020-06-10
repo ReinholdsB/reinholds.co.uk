@@ -39,17 +39,20 @@
             </div>
         </form>
     </div>
-    <button @click="addOneMoney">Add One M (+1 M)</button>
-    <button @click="addOneWorker">Add One W (-{{config.workers.cost + (config.workers.cost/10 * workers)}} M,
-        {{config.workers.perSecond}} M/sec)
-    </button>
-    <button @click="addOneFactory">Add One F (-{{config.factories.cost + (config.factories.cost/10 * factories)}} M,
-        {{config.factories.perSecond}} M/sec)
-    </button>
-    <button @click="addOneSweatshop">Add One S (-{{config.sweatshop.cost + (config.sweatshop.cost/10 * sweatshop)}} M,
-        {{config.sweatshop.perSecond}} M/sec)
-    </button>
-    <button @click="resetApp">Reset App</button>
+    <div class="container">
+        <button @click="addOneMoney">Add One M (+1 M)</button>
+        <button @click="addOneWorker">Add One W (-{{config.workers.cost + (config.workers.cost/10 * workers)}} M,
+            {{config.workers.perSecond}} M/sec)
+        </button>
+        <button @click="addOneFactory">Add One F (-{{config.factories.cost + (config.factories.cost/10 * factories)}} M,
+            {{config.factories.perSecond}} M/sec)
+        </button>
+        <button @click="addOneSweatshop">Add One S (-{{config.sweatshop.cost + (config.sweatshop.cost/10 * sweatshop)}}
+            M,
+            {{config.sweatshop.perSecond}} M/sec)
+        </button>
+        <button @click="resetApp">Reset App</button>
+    </div>
 </div>
 <script src="js/tax/vue.min.js"></script>
 <script src="js/game/script.js"></script>
