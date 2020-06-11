@@ -90,16 +90,16 @@ const calculator = new Vue({
         },
         addOneWorker() {
             const cost = config.workers.cost + (config.workers.cost/10 * this.workers);
-            if (this.money >= config.workers.cost) {
+            if (this.money >= cost) {
                 this.workers = this.workers + 1;
-                this.money = this.money - config.workers.cost;
+                this.money = this.money - cost;
             }
         },
         addOneFactory() {
             const cost = config.factories.cost + (config.factories.cost/10 * this.factories);
-            if (this.money >= config.factories.cost) {
+            if (this.money >= cost) {
                 this.factories = this.factories + 1;
-                this.money = this.money - config.factories.cost;
+                this.money = this.money - cost;
             }
         },
         addOneSweatshop() {
