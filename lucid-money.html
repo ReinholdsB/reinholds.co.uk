@@ -14,7 +14,7 @@
 <body>
 <div id="calculator">
     <div class="container">
-        <div>
+        <form action="">
             <h1>The Tax-culator</h1>
             <p>Calculate your taxes and income</p>
 
@@ -32,7 +32,7 @@
                     <label for="weeks-worked-range">-</label>
                     <label for="weeks-worked">Weeks worked</label>
                     <input id="weeks-worked" type="number" name="weeks-worked" class="currency"
-                    v-model.number="weeksWorked"/>
+                           v-model.number="weeksWorked"/>
                     <input id="weeks-worked-range" type="range" min="0" max="52" step="1" class="currency slider"
                            v-model.number="weeksWorked">
                 </div>
@@ -45,7 +45,7 @@
                     <label for="day-expense-range">-</label>
                     <label for="day-expense">Daily</label>
                     <input id="day-expense" type="number" name="day-expense" class="currency"
-                    v-model.number="dayExpense"/>
+                           v-model.number="dayExpense"/>
                     <input id="day-expense-range" type="range" min="0" max="100" step="1" class="currency slider"
                            v-model.number="dayExpense">
                 </div>
@@ -53,7 +53,7 @@
                     <label for="month-expense-range">-</label>
                     <label for="month-expense">Monthly</label>
                     <input id="month-expense" type="number" name="month-expense" class="currency"
-                    v-model.number="monthExpense"/>
+                           v-model.number="monthExpense"/>
                     <input id="month-expense-range" type="range" min="0" max="1000" step="1" class="currency slider"
                            v-model.number="monthExpense">
                 </div>
@@ -61,7 +61,7 @@
                     <label for="year-expense-range">-</label>
                     <label for="year-expense">Yearly</label>
                     <input id="year-expense" type="number" name="year-expense" class="currency"
-                    v-model.number="yearExpense"/>
+                           v-model.number="yearExpense"/>
                     <input id="year-expense-range" type="range" min="0" max="100000" step="10" class="currency slider"
                            v-model.number="yearExpense">
                 </div>
@@ -100,9 +100,8 @@
             <!--<option value="1718">2017/2018</option>-->
             <!--<option value="1819" selected >2018/2019</option>-->
             <!--</select>-->
-        </div>
+        </form>
 
-        <canvas id="myChart" width="400" height="400"></canvas>
 
         <div class="sub-grid-container">
             <div class="sub-grid-container">
@@ -166,10 +165,8 @@
         </div>
     </div>
 </div>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js" integrity="sha256-R4pqcOYV8lt7snxMQO/HSbVCFRPMdrhAFMH+vr9giYI=" crossorigin="anonymous"></script>
 <script src="js/common/vue.min.js"></script>
-<script src="js/tax/script.js"></script>
-<link rel="stylesheet" type="text/css" href="css/tax/style.css">
+<script src="js/lucid-money/script.js"></script>
+<link rel="stylesheet" type="text/css" href="css/lucid-money/style.css">
 </body>
 </html>
-
