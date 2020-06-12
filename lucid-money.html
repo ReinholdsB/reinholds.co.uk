@@ -20,13 +20,13 @@
 
             <div class="sub-grid-container">
                 <div>
-                    <button @click="saveDayRate">Save</button>
-                    <button @click="resetDayRate">Reset</button>
+                    <button @click="saveIncome">Save</button>
+                    <button @click="resetIncome">Reset</button>
                     <button disabled>Autofill</button>
                 </div>
             </div>
 
-            <h3>Income</h3>
+            <h3>Income (after tax)</h3>
             <div class="grid-container">
                 <div>
                     <label for="salary-range-daily">-</label>
@@ -53,11 +53,11 @@
                            v-model.number="monthlyIncome" disabled>
                 </div>
                 <div>
-                    <label for="salary-range-yearly">-</label>
-                    <label for="salary-yearly">Yearly</label>
-                    <input id="salary-yearly" type="number" name="salary" class="currency" v-model.number="salary"/>
-                    <input id="salary-range-yearly" type="range" min="0" max="200000" step="10" class="currency slider"
-                           v-model.number="salary">
+                    <label for="income-range-yearly">-</label>
+                    <label for="income-yearly">Yearly</label>
+                    <input id="income-yearly" type="number" name="income" class="currency" v-model.number="income"/>
+                    <input id="income-range-yearly" type="range" min="0" max="200000" step="10" class="currency slider"
+                           v-model.number="income">
                 </div>
             </div>
 

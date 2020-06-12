@@ -7,7 +7,7 @@ let formData = {
     monthExpense: 1000,
     yearExpense: 0,
     year: "1920",
-    salary: defaultSalary,
+    income: defaultSalary,
     scale: 1,
     options: [
         {text: 'Yearly', value: '1'},
@@ -23,8 +23,8 @@ const calculator = new Vue({
     el: '#calculator',
     data: formData,
     mounted() {
-        if (localStorage.getItem('dayRate')) {
-            this.dayRate = localStorage.getItem('dayRate');
+        if (localStorage.getItem('income')) {
+            this.income = localStorage.getItem('income');
         }
         this.initChart()
         setInterval(() => {
@@ -45,13 +45,13 @@ const calculator = new Vue({
             return this.yearlyIncome;
         },
         dailyIncome: function () {
-            return roundCurrency(this.salary / 365);
+            return roundCurrency(this.income / 365);
         },
         weeklyIncome: function () {
-            return roundCurrency(this.salary / 52);
+            return roundCurrency(this.income / 52);
         },
         monthlyIncome: function () {
-            return roundCurrency(this.salary / 12);
+            return roundCurrency(this.income / 12);
         }
     },
     methods: {
@@ -59,23 +59,19 @@ const calculator = new Vue({
         numFormat: function (e) {
             return e.toFixed(0).replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
         },
-        resetDayRate() {
-            localStorage.removeItem('dayRate');
-            this.dayRate = defaultDayRate
+        resetIncome() {
+            localStorage.removeItem('income');
+            this.income = defaultSalary
         },
-        saveDayRate() {
-            localStorage.setItem('dayRate', this.dayRate);
-        },
-        resetSalary() {
-            localStorage.removeItem('salary');
-            this.salary = defaultSalary
+        saveIncome() {
+            localStorage.setItem('income', this.income);
         },
         initChart() {
             const ctx = document.getElementById('myChart');
             this.chart = new Chart(ctx, {
                 type: 'line',
                 data: {
-                    labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'November', 'December'],
+                    labels: ['January', '-', 'February', '-', 'March', '-', 'April', '-', 'May', '-', 'June', '-', 'July', '-', 'August', '-', 'September', '-', 'October', '-', 'November', '-', 'December', '-'],
                     datasets: [
                         {
                             label: 'Income',
@@ -99,46 +95,44 @@ const calculator = new Vue({
                             stacks: true
                         }]
                     },
-                    animation: {animate: false}
+                    elements: {line: {tension: 0.3}}
                 }
             });
 
         },
         refreshChart() {
-            this.chartDataTemp = [
-                this.monthlyIncome * 1,
-                this.monthlyIncome * 2,
-                this.monthlyIncome * 3,
-                this.monthlyIncome * 4,
-                this.monthlyIncome * 5,
-                this.monthlyIncome * 6,
-                this.monthlyIncome * 7,
-                this.monthlyIncome * 8,
-                this.monthlyIncome * 9,
-                this.monthlyIncome * 10,
-                this.monthlyIncome * 11,
-                this.monthlyIncome * 12
-            ];
-            this.chartDataTemp2 = [
-                this.weeklyExpense * 52 / 12 * 1,
-                this.weeklyExpense * 52 / 12 * 2,
-                this.weeklyExpense * 52 / 12 * 3,
-                this.weeklyExpense * 52 / 12 * 4,
-                this.weeklyExpense * 52 / 12 * 5,
-                this.weeklyExpense * 52 / 12 * 6,
-                this.weeklyExpense * 52 / 12 * 7,
-                this.weeklyExpense * 52 / 12 * 8,
-                this.weeklyExpense * 52 / 12 * 9,
-                this.weeklyExpense * 52 / 12 * 10,
-                this.weeklyExpense * 52 / 12 * 11,
-                this.weeklyExpense * 52 / 12 * 12
-            ];
-            if (JSON.stringify(this.chartData) !== JSON.stringify(this.chartDataTemp)
-                || JSON.stringify(this.chartData2) !== JSON.stringify(this.chartDataTemp2)) {
+            this.chartDataTemp = []
+            this.chartDataTemp.push(this.monthlyIncome);
+            const monthlyExp = this.weeklyExpense * 52 / 12;
+
+            this.chartDataTemp.push(this.chartDataTemp[0] - monthlyExp);
+            this.chartDataTemp.push(this.chartDataTemp[1] + this.monthlyIncome);
+            this.chartDataTemp.push(this.chartDataTemp[2] - monthlyExp);
+            this.chartDataTemp.push(this.chartDataTemp[3] + this.monthlyIncome);
+            this.chartDataTemp.push(this.chartDataTemp[4] - monthlyExp);
+            this.chartDataTemp.push(this.chartDataTemp[5] + this.monthlyIncome);
+            this.chartDataTemp.push(this.chartDataTemp[6] - monthlyExp);
+            this.chartDataTemp.push(this.chartDataTemp[7] + this.monthlyIncome);
+            this.chartDataTemp.push(this.chartDataTemp[8] - monthlyExp);
+            this.chartDataTemp.push(this.chartDataTemp[9] + this.monthlyIncome);
+            this.chartDataTemp.push(this.chartDataTemp[10] - monthlyExp);
+            this.chartDataTemp.push(this.chartDataTemp[11] + this.monthlyIncome);
+            this.chartDataTemp.push(this.chartDataTemp[12] - monthlyExp);
+            this.chartDataTemp.push(this.chartDataTemp[13] + this.monthlyIncome);
+            this.chartDataTemp.push(this.chartDataTemp[14] - monthlyExp);
+            this.chartDataTemp.push(this.chartDataTemp[15] + this.monthlyIncome);
+            this.chartDataTemp.push(this.chartDataTemp[16] - monthlyExp);
+            this.chartDataTemp.push(this.chartDataTemp[17] + this.monthlyIncome);
+            this.chartDataTemp.push(this.chartDataTemp[18] - monthlyExp);
+            this.chartDataTemp.push(this.chartDataTemp[19] + this.monthlyIncome);
+            this.chartDataTemp.push(this.chartDataTemp[20] - monthlyExp);
+            this.chartDataTemp.push(this.chartDataTemp[21] + this.monthlyIncome);
+            this.chartDataTemp.push(this.chartDataTemp[22] - monthlyExp);
+            this.chartDataTemp.push(this.chartDataTemp[23] + this.monthlyIncome);
+
+            if (JSON.stringify(this.chartData) !== JSON.stringify(this.chartDataTemp)) {
                 this.chartData = this.chartDataTemp;
-                this.chartData2 = this.chartDataTemp2
                 this.chart.data.datasets[0].data = this.chartData
-                this.chart.data.datasets[1].data = this.chartData2
                 this.chart.update();
             }
         }
