@@ -80,30 +80,26 @@ const calculator = new Vue({
                         {
                             label: 'Income',
                             data: [],
-                            backgroundColor: ['rgba(42,255,35,0.2)'
-                            ],
+                            backgroundColor: ['rgba(42,255,35,0.2)'],
                             borderColor: ['rgb(42,255,35)'],
+                            borderWidth: 2
                         },
                         {
                             label: 'Expenses',
                             data: [],
                             backgroundColor: ['rgba(255,58,95, 0.2)'],
                             borderColor: ['rgb(255,58,95)'],
-                            borderWidth: 1
+                            borderWidth: 2
                         }]
                 },
                 options: {
                     scales: {
                         yAxes: [{
-                            ticks: {
-                                beginAtZero: true
-                            },
+                            ticks: {beginAtZero: true},
                             stacks: true
                         }]
                     },
-                    animation: {
-                        animate: false
-                    }
+                    animation: {animate: false}
                 }
             });
 

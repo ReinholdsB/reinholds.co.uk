@@ -68,7 +68,7 @@
                     <label for="day-expense">Daily</label>
                     <input id="day-expense" type="number" name="day-expense" class="currency"
                            v-model.number="dayExpense"/>
-                    <input id="day-expense-range" type="range" min="0" max="100" step="1" class="currency slider"
+                    <input id="day-expense-range" type="range" min="0" max="1000" step="1" class="currency slider"
                            v-model.number="dayExpense">
                 </div>
                 <div>
@@ -84,7 +84,7 @@
                     <label for="month-expense">Monthly</label>
                     <input id="month-expense" type="number" name="month-expense" class="currency"
                            v-model.number="monthExpense"/>
-                    <input id="month-expense-range" type="range" min="0" max="1000" step="1" class="currency slider"
+                    <input id="month-expense-range" type="range" min="0" max="10000" step="1" class="currency slider"
                            v-model.number="monthExpense">
                 </div>
                 <div>
@@ -92,13 +92,13 @@
                     <label for="year-expense">Yearly</label>
                     <input id="year-expense" type="number" name="year-expense" class="currency"
                            v-model.number="yearExpense"/>
-                    <input id="year-expense-range" type="range" min="0" max="100000" step="10" class="currency slider"
+                    <input id="year-expense-range" type="range" min="0" max="1000000" step="10" class="currency slider"
                            v-model.number="yearExpense">
                 </div>
             </div>
         </div>
 
-        <canvas id="myChart" width="400" height="400"></canvas>
+        <canvas id="myChart" width="400" height="300"></canvas>
 
     </div>
 </div>
