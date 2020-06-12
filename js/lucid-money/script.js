@@ -68,10 +68,48 @@ const calculator = new Vue({
         },
         initChart() {
             const ctx = document.getElementById('myChart');
+            const ctx2 = document.getElementById('myChart2');
             this.chart = new Chart(ctx, {
                 type: 'line',
                 data: {
                     labels: ['January', '-', 'February', '-', 'March', '-', 'April', '-', 'May', '-', 'June', '-', 'July', '-', 'August', '-', 'September', '-', 'October', '-', 'November', '-', 'December', '-'],
+                    datasets: [
+                        {
+                            label: 'Income',
+                            data: [],
+                            backgroundColor: ['rgba(42,255,35,0.2)'],
+                            borderColor: ['rgb(42,255,35)'],
+                            borderWidth: 2
+                        },
+                        {
+                            label: 'Total',
+                            data: [],
+                            backgroundColor: ['rgba(57,31,36,0.2)'],
+                            borderColor: ['rgb(16,8,10)'],
+                            borderWidth: 2
+                        },
+                        {
+                            label: 'Expenses',
+                            data: [],
+                            backgroundColor: ['rgba(255,58,95, 0.2)'],
+                            borderColor: ['rgb(255,58,95)'],
+                            borderWidth: 2
+                        }]
+                },
+                options: {
+                    scales: {
+                        yAxes: [{
+                            ticks: {beginAtZero: true},
+                            stacks: true
+                        }]
+                    },
+                    elements: {line: {tension: 0.1}}
+                }
+            });
+            this.chart2 = new Chart(ctx2, {
+                type: 'line',
+                data: {
+                    labels: [...Array(40).keys()].flatMap(i => i+1),
                     datasets: [
                         {
                             label: 'Income',
@@ -192,10 +230,14 @@ const calculator = new Vue({
 
             if (JSON.stringify(this.chartData) !== JSON.stringify(this.chartDataTemp)) {
                 this.chartData = this.chartDataTemp;
-                this.chart.data.datasets[0].data = this.chartDataTemp2
-                this.chart.data.datasets[1].data = this.chartData
-                this.chart.data.datasets[2].data = this.chartDataTemp3
+                this.chart.data.datasets[0].data = this.chartDataTemp2;
+                this.chart.data.datasets[1].data = this.chartData;
+                this.chart.data.datasets[2].data = this.chartDataTemp3;
+                this.chart2.data.datasets[0].data = [...Array(40).keys()].flatMap(i => this.income*(i+1));
+                this.chart2.data.datasets[1].data = [...Array(40).keys()].flatMap(i => (this.income - this.yearlyExpense)*(i+1));
+                this.chart2.data.datasets[2].data = [...Array(40).keys()].flatMap(i => this.yearlyExpense*(i+1));
                 this.chart.update();
+                this.chart2.update();
             }
         }
     }
