@@ -1,12 +1,12 @@
-<html  lang="en">
+<html lang="en">
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="Tax Calculator for Contractors working through a limited company in UK.">
+    <meta name="description" content="Lucid Money - See money as never before">
     <meta name="author" content="Reinholds Bunde">
 
-    <title>Contractor Tax Calculator UK</title>
+    <title>Lucid Money</title>
 
     <link rel="icon" href="/img/favicon.ico">
 </head>
@@ -14,32 +14,54 @@
 <body>
 <div id="calculator">
     <div class="container">
-        <form action="">
-            <h1>The Tax-culator</h1>
-            <p>Calculate your taxes and income</p>
+        <div>
+            <h1>Lucid Money</h1>
+            <p>See money as never before</p>
 
             <div class="sub-grid-container">
                 <div>
-                    <label for="day-rate-range">-</label>
-                    <label for="day-rate">Daily Rate</label>
-                    <input id="day-rate" type="number" name="dayRate" class="currency" v-model.number="dayRate"/>
-                    <input id="day-rate-range" type="range" min="100" max="1000" step="25" class="currency slider"
-                           v-model.number="dayRate">
                     <button @click="saveDayRate">Save</button>
                     <button @click="resetDayRate">Reset</button>
+                    <button disabled>Autofill</button>
+                </div>
+            </div>
+
+            <h3>Income</h3>
+            <div class="grid-container">
+                <div>
+                    <label for="salary-range-daily">-</label>
+                    <label for="salary-daily">Daily</label>
+                    <input id="salary-daily" type="number" name="dailyIncome" class="currency"
+                           v-model.number="dailyIncome"/>
+                    <input id="salary-range-daily" type="range" min="0" max="600" step="10" class="currency slider"
+                           v-model.number="dailyIncome" disabled>
                 </div>
                 <div>
-                    <label for="weeks-worked-range">-</label>
-                    <label for="weeks-worked">Weeks worked</label>
-                    <input id="weeks-worked" type="number" name="weeks-worked" class="currency"
-                           v-model.number="weeksWorked"/>
-                    <input id="weeks-worked-range" type="range" min="0" max="52" step="1" class="currency slider"
-                           v-model.number="weeksWorked">
+                    <label for="salary-range-weekly">-</label>
+                    <label for="salary-weekly">Weekly</label>
+                    <input id="salary-weekly" type="number" name="weeklyIncome" class="currency"
+                           v-model.number="weeklyIncome"/>
+                    <input id="salary-range-weekly" type="range" min="0" max="4000" step="10" class="currency slider"
+                           v-model.number="weeklyIncome" disabled>
+                </div>
+                <div>
+                    <label for="salary-range-monthly">-</label>
+                    <label for="salary-monthly">Monthly</label>
+                    <input id="salary-monthly" type="number" name="monthlyIncome" class="currency"
+                           v-model.number="monthlyIncome"/>
+                    <input id="salary-range-monthly" type="range" min="0" max="17000" step="10" class="currency slider"
+                           v-model.number="monthlyIncome" disabled>
+                </div>
+                <div>
+                    <label for="salary-range-yearly">-</label>
+                    <label for="salary-yearly">Yearly</label>
+                    <input id="salary-yearly" type="number" name="salary" class="currency" v-model.number="salary"/>
+                    <input id="salary-range-yearly" type="range" min="0" max="200000" step="10" class="currency slider"
+                           v-model.number="salary">
                 </div>
             </div>
 
             <h3>Expenses</h3>
-
             <div class="grid-container">
                 <div>
                     <label for="day-expense-range">-</label>
@@ -48,6 +70,14 @@
                            v-model.number="dayExpense"/>
                     <input id="day-expense-range" type="range" min="0" max="100" step="1" class="currency slider"
                            v-model.number="dayExpense">
+                </div>
+                <div>
+                    <label for="weekly-expense-range">-</label>
+                    <label for="weekly-expense">Weekly</label>
+                    <input id="weekly-expense" type="number" name="weekly-expense" class="currency"
+                           v-model.number="weeklyExpense"/>
+                    <input id="weekly-expense-range" type="range" min="0" max="1000" step="1" class="currency slider"
+                           v-model.number="weeklyExpense">
                 </div>
                 <div>
                     <label for="month-expense-range">-</label>
@@ -66,107 +96,17 @@
                            v-model.number="yearExpense">
                 </div>
             </div>
-            <h3>Split</h3>
-
-            <div class="grid-container">
-                <div>
-                    <label for="dividends-range">-</label>
-                    <label for="dividends">Dividends</label>
-                    <input id="dividends" name="dividends" class="currency"
-                           v-model.number="dividends"/>
-                    <input id="dividends-range" type="range" min="0" max="200000" step="1000" class="currency slider"
-                           v-model.number="dividends" disabled>
-                </div>
-                <div>
-                    <label for="salary-range">-</label>
-                    <label for="salary">Salary</label>
-                    <input id="salary" type="number" name="salary" class="currency" v-model.number="salary"/>
-                    <input id="salary-range" type="range" min="0" max="200000" step="10" class="currency slider"
-                           v-model.number="salary">
-                    <button @click="resetSalary">Reset</button>
-                </div>
-                <div>
-                    <label for="scale">- Period</label>
-                    <select id="scale" name="scale" v-model="scale">
-                        <option v-for="option in options" v-bind:value="option.value">
-                            {{ option.text }}
-                        </option>
-                    </select>
-                </div>
-            </div>
-
-            <!--<label for="year">Year</label>-->
-            <!--<select <label id="year">Year</label>  name="year" v-model="year">-->
-            <!--<option value="1718">2017/2018</option>-->
-            <!--<option value="1819" selected >2018/2019</option>-->
-            <!--</select>-->
-        </form>
-
-
-        <div class="sub-grid-container">
-            <div class="sub-grid-container">
-                <div class="box box2">Company</div>
-
-                <div class="box">Income:</div>
-                <div class="box">&pound;{{ numFormat(perYear/scale) }}</div>
-
-                <div class="box">Expenses:</div>
-                <div class="box negative">&pound;{{ numFormat(yearlyExpense/scale) }}</div>
-
-                <div class="box">Salaries:</div>
-                <div class="box negative">&pound;{{ numFormat(salary/scale) }}</div>
-
-                <div class="box">Employer NI:</div>
-                <div class="box negative">&pound;{{ numFormat(employerNI/scale) }}</div>
-
-                <div class="box">Corporation Tax:</div>
-                <div class="box negative">&pound;{{ numFormat(corpTax/scale) }}</div>
-
-                <div class="box total">Net:</div>
-                <div class="box total">&pound;{{ numFormat(perYearNet/scale) }}</div>
-
-            </div>
-            <div class="sub-grid-container">
-                <div class="box box2">Personal</div>
-
-                <div class="box">Salary:</div>
-                <div class="box">&pound;{{ numFormat(salary/scale) }}</div>
-
-                <div class="box">Dividends:</div>
-                <div class="box">&pound;{{ numFormat(dividends/scale) }}</div>
-
-                <div class="box">Income Before Tax:</div>
-                <div class="box">&pound;{{ numFormat(incomeBeforeTax/scale) }}</div>
-
-                <div></div>
-                <div></div>
-                <div class="box">Salary Tax:</div>
-                <div class="box negative">&pound;{{ numFormat(salaryTax/scale) }}</div>
-
-                <div class="box">Salary NI:</div>
-                <div class="box negative">&pound;{{ numFormat(salaryNI/scale) }}</div>
-
-                <div class="box">Dividends Tax:</div>
-                <div class="box negative">&pound;{{ numFormat(dividendsTax/scale) }}</div>
-
-                <div></div>
-                <div></div>
-                <div class="box">Salary After Tax:</div>
-                <div class="box">&pound;{{ numFormat(salaryAfterTax/scale) }}</div>
-
-                <div class="box">Dividends Taxed:</div>
-                <div class="box">&pound;{{ numFormat(dividendsTaxed/scale) }}</div>
-
-                <div></div>
-                <div></div>
-                <div class="box total">Income After Tax:</div>
-                <div class="box total">&pound;{{ numFormat(incomeAfterTax/scale) }}</div>
-            </div>
         </div>
+
+        <canvas id="myChart" width="400" height="400"></canvas>
+
     </div>
 </div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js"
+        integrity="sha256-R4pqcOYV8lt7snxMQO/HSbVCFRPMdrhAFMH+vr9giYI=" crossorigin="anonymous"></script>
 <script src="js/common/vue.min.js"></script>
 <script src="js/lucid-money/script.js"></script>
-<link rel="stylesheet" type="text/css" href="css/lucid-money/style.css">
+<link rel="stylesheet" type="text/css" href="css/tax/style.css">
 </body>
 </html>
+

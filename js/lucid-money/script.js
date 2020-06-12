@@ -179,48 +179,23 @@ const calculator = new Vue({
         yearlyExpense: function () {
             return (this.dayExpense * this.weeksWorked * 5) + (this.monthExpense * 12) + this.yearExpense;
         },
+        weeklyExpense: function () {
+            return this.yearlyExpense / 52;
+        },
         yearlyIncome: function () {
             return this.weeksWorked * this.dayRate * 5
         },
         perYear: function () {
             return this.yearlyIncome;
         },
-        corpTax: function () {
-            return (this.yearlyIncome - this.yearlyExpense - this.salary) * (taxValues.corpTax);
+        dailyIncome: function () {
+            return roundCurrency(this.salary / 365);
         },
-        perYearNet: function () {
-            return (this.yearlyIncome - this.yearlyExpense - this.salary) * (1 - taxValues.corpTax);
+        weeklyIncome: function () {
+            return roundCurrency(this.salary / 52);
         },
-        salaryTax: function () {
-            return calcIncomeTax(this.salary).totalTax;
-        },
-        employerNI: function () {
-            return calcEmployerNI(this.salary);
-        },
-        salaryNI: function () {
-            return calcSalaryNI(this.salary);
-        },
-        studentLoanContribution: function () {
-            return calcStudentLoanRepayment(this.salary, 1);
-        },
-        salaryAfterTax: function () {
-            const tax = calcIncomeTax(this.salary).totalTax + calcSalaryNI(this.salary);
-            return this.salary - tax;
-        },
-        dividends: function () {
-            return this.perYearNet;
-        },
-        dividendsTax: function () {
-            return calcSalaryAndDividendsTax(this.salary, this.dividends).totalTax;
-        },
-        dividendsTaxed: function () {
-            return this.dividends - this.dividendsTax;
-        },
-        incomeBeforeTax: function () {
-            return this.dividends + this.salary;
-        },
-        incomeAfterTax: function () {
-            return this.dividendsTaxed + this.salaryAfterTax;
+        monthlyIncome: function () {
+            return roundCurrency(this.salary / 12);
         }
     },
     methods: {
@@ -241,82 +216,65 @@ const calculator = new Vue({
         },
         refreshChart() {
             this.chartDataTemp = [
-                0,
-                0,
-                this.yearlyExpense,
-                this.employerNI,
-                this.salaryTax,
-                this.corpTax,
-                this.dividendsTax,
-                this.salaryNI,
-                this.salaryAfterTax,
-                this.dividendsTaxed,
+                this.monthlyIncome * 1,
+                this.monthlyIncome * 2,
+                this.monthlyIncome * 3,
+                this.monthlyIncome * 4,
+                this.monthlyIncome * 5,
+                this.monthlyIncome * 6,
+                this.monthlyIncome * 7,
+                this.monthlyIncome * 8,
+                this.monthlyIncome * 9,
+                this.monthlyIncome * 10,
+                this.monthlyIncome * 11,
+                this.monthlyIncome * 12
             ];
-            if (JSON.stringify(this.chartData) !== JSON.stringify(this.chartDataTemp)) {
-                let total = this.yearlyExpense + this.employerNI + this.salaryTax + this.corpTax + this.dividendsTax +this.salaryNI+ this.salaryAfterTax + this.dividendsTaxed;
+            this.chartDataTemp2 = [
+                this.weeklyExpense *52/12 * 1,
+                this.weeklyExpense *52/12 * 2,
+                this.weeklyExpense *52/12 * 3,
+                this.weeklyExpense *52/12 * 4,
+                this.weeklyExpense *52/12 * 5,
+                this.weeklyExpense *52/12 * 6,
+                this.weeklyExpense *52/12 * 7,
+                this.weeklyExpense *52/12 * 8,
+                this.weeklyExpense *52/12 * 9,
+                this.weeklyExpense *52/12 * 10,
+                this.weeklyExpense *52/12 * 11,
+                this.weeklyExpense *52/12 * 12
+            ];
+            if (JSON.stringify(this.chartData) !== JSON.stringify(this.chartDataTemp) || JSON.stringify(this.chartData2) !== JSON.stringify(this.chartDataTemp2)) {
                 this.chartData = this.chartDataTemp;
-                this.chartData2 = [
-                    Math.round((this.yearlyExpense + this.employerNI + this.salaryTax + this.corpTax + this.dividendsTax+this.salaryNI) / total * 100) / 100,
-                    Math.round((this.salaryAfterTax + this.dividendsTaxed) / total * 100) / 100,
-                ];
+                this.chartData2 = this.chartDataTemp2;
                 const ctx = document.getElementById('myChart');
                 if (this.chart != null) {
                     this.chart.destroy();
                 }
                 this.chart = new Chart(ctx, {
-                    type: 'pie',
+                    type: 'line',
                     data: {
                         labels: [
-                            'Tax',
-                            'Net',
-                            'Expenses',
-                            'Tax - EmployerNI',
-                            'Tax - Salary',
-                            'Tax - Corporation',
-                            'Tax - Dividends',
-                            'Tax - NI',
-                            'Net - Salary',
-                            'Net - Dividends',
+                            'January', 'February', 'March', 'April', 'May', 'June',"July", "August", "September", "November", "December"
                         ],
-                        datasets: [{
-                            label: 'tax vs salary vs dividends',
-                            data: this.chartData,
-                            backgroundColor: [
-                                'rgba(255,58,95, 0.2)',
-                                'rgba(42,255,35, 0.2)',
-                                'rgba(255, 159, 45, 0.2)',
-                                'rgba(255, 159, 64, 0.2)',
-                                'rgba(255, 159, 64, 0.2)',
-                                'rgba(255, 206, 86, 0.2)',
-                                'rgba(235,106,74,0.2)',
-                                'rgba(255,45,45,0.2)',
-                                'rgba(49,192,123,0.2)',
-                                'rgba(60,255,188,0.2)'
-                            ],
-                            borderColor: [
-                                'rgba(255,58,95)',
-                                'rgba(42,255,35)',
-                                'rgb(255,116,45)',
-                                'rgb(255,116,99)',
-                                'rgba(255, 159, 64)',
-                                'rgba(255, 206, 86)',
-                                'rgb(235,76,48)',
-                                'rgb(255,45,45)',
-                                'rgb(49,192,123)',
-                                'rgb(60,255,188)'
-                            ],
-                            borderWidth: 1
-                        },
+                        datasets: [
                             {
-                                label: 'tax vs salary vs dividends',
-                                data: this.chartData2,
+                                label: 'Income',
+                                data: this.chartData,
                                 backgroundColor: [
-                                    'rgba(255,58,95, 0.2)',
                                     'rgba(42,255,35,0.2)'
                                 ],
                                 borderColor: [
-                                    'rgb(255,58,95)',
                                     'rgb(42,255,35)'
+                                ],
+                            },
+                            {
+                                label: 'Expenses',
+                                data: this.chartData2,
+                                backgroundColor: [
+                                    'rgba(255,58,95, 0.2)',
+                                ],
+                                borderColor: [
+                                    'rgb(255,58,95)',
                                 ],
                                 borderWidth: 1
                             }]
@@ -326,11 +284,12 @@ const calculator = new Vue({
                             yAxes: [{
                                 ticks: {
                                     beginAtZero: true
-                                }
+                                },
+                                stacks: true
                             }]
                         },
                         animation: {
-                            animateRotate: false
+                            animate: false
                         }
                     }
                 });
@@ -339,125 +298,8 @@ const calculator = new Vue({
     }
 });
 
-function onlyPositive(value) {
-    return Math.max(0, value) || 0;
-}
-
-function calcIncomeTax(salary, dividends) {
-    const income = salary + dividends;
-    const tax = TAX.income;
-    const allowanceReduction = onlyPositive(income - TAX.allowance.thresholds.taper) / 2;
-    const allowance = onlyPositive(TAX.allowance.basic - allowanceReduction);
-
-    const basicRateSalaryAmount = onlyPositive(Math.min(salary, tax.basic.till + allowance) - allowance);
-    const higherRateSalaryAmount = onlyPositive(Math.min(salary, tax.higher.till) - (tax.basic.till + allowance));
-    const additionalRateSalaryAmount = onlyPositive(salary - tax.higher.till);
-
-    const basicRateTax = tax.basic.rate * basicRateSalaryAmount;
-    const higherRateTax = tax.higher.rate * higherRateSalaryAmount;
-    const additionalRateTax = tax.additional.rate * additionalRateSalaryAmount;
-
-    return {
-        allowance: Math.round(allowance),
-        allowanceReduction: Math.round(allowanceReduction),
-
-        basicRateSalaryAmount: Math.round(basicRateSalaryAmount),
-        higherRateSalaryAmount: Math.round(higherRateSalaryAmount),
-        additionalRateSalaryAmount: Math.round(additionalRateSalaryAmount),
-
-        basicRateTax: Math.round(basicRateTax),
-        higherRateTax: Math.round(higherRateTax),
-        additionalRateTax: Math.round(additionalRateTax),
-
-        totalTax: roundCurrency(basicRateTax + higherRateTax + additionalRateTax),
-        totalNet: roundCurrency(basicRateSalaryAmount + higherRateSalaryAmount + additionalRateSalaryAmount)
-    };
-}
-
-function calcSalaryAndDividendsTax(salary, dividends) {
-    if (dividends <= TAX.dividend.allowance) return {
-        basicRateTax: 0,
-        higherRateTax: 0,
-        additionalTaxRateMath: 0,
-        totalTax: 0
-    };
-    const income = salary + dividends;
-
-    const salaryTaxes = calcIncomeTax(salary, dividends);
-    const allowance = salaryTaxes.allowance;
-
-    const tax = TAX.income;
-
-    let additionalRateDividend;
-    let higherRateDividend;
-    let basicRateDividend;
-
-    const higherTill = tax.higher.till;
-    const basicTill = tax.basic.till;
-
-    const basicLimit = basicTill + TAX.allowance.basic;
-
-    //TODO Handle cases where dividend allowance falls between tax brackets
-    if (salary > higherTill) {
-        basicRateDividend = 0;
-        higherRateDividend = 0;
-        additionalRateDividend = onlyPositive(dividends - TAX.dividend.allowance);
-    } else if (salary > basicLimit) {
-        additionalRateDividend = onlyPositive(income - higherTill);
-        higherRateDividend = onlyPositive(Math.min(onlyPositive(higherTill - salary), dividends) - TAX.dividend.allowance);
-        basicRateDividend = 0;
-    } else {
-        additionalRateDividend = onlyPositive(income - higherTill);
-
-        const higherAllowance = onlyPositive(TAX.dividend.allowance - basicLimit - salary);
-
-        higherRateDividend = onlyPositive(Math.min(onlyPositive(income - basicLimit - higherAllowance), higherTill - basicLimit));
-
-        basicRateDividend = onlyPositive(Math.min(dividends, basicLimit) - TAX.dividend.allowance - onlyPositive(allowance - salary));
-    }
-
-    const additionalTaxRate = TAX.dividend.additional * additionalRateDividend;
-    const higherRateTax = TAX.dividend.higher * higherRateDividend;
-    const basicRateTax = TAX.dividend.basic * basicRateDividend;
-
-    const result = {
-        dividendAllowance: Math.round(TAX.dividend.allowance),
-        basicRateTax: Math.round(basicRateTax),
-        higherRateTax: Math.round(higherRateTax),
-        additionalTaxRateMath: Math.round(additionalTaxRate),
-        totalTax: Math.round(basicRateTax + higherRateTax + additionalTaxRate)
-    };
-    return result;
-}
-
 function roundCurrency(x) {
     return Math.round(x * 100) / 100;
-}
-
-function calcSalaryNI(salary) {
-    const ni = TAX.natInsurance;
-    const basicRateNi = onlyPositive(Math.min(salary, ni.rate_12.till) - ni.rate_0.till) * ni.rate_12.rate;
-    const higherRateNi = onlyPositive(salary - ni.rate_12.till) * ni.rate_2.rate;
-
-    return roundCurrency(basicRateNi + higherRateNi);
-}
-
-function calcEmployerNI(salary) {
-    let natInsurance = 0;
-    if (salary > TAX.natInsurance.rate_employer.start) {
-        natInsurance += (salary - TAX.natInsurance.rate_employer.start) * TAX.natInsurance.rate_employer.rate;
-    }
-    return roundCurrency(natInsurance);
-}
-
-function calcStudentLoanRepayment(salary, plan) {
-    let studentLoan = 0;
-    if (plan === 1 && salary > TAX.studentLoan.plan_1.threshold) {
-        studentLoan += (salary - TAX.studentLoan.plan_1.threshold) * TAX.studentLoan.plan_1.rate;
-    } else if (plan === 2 && salary > TAX.studentLoan.plan_2.threshold) {
-        studentLoan += (salary - TAX.studentLoan.plan_2.threshold) * TAX.studentLoan.plan_2.rate;
-    }
-    return roundCurrency(studentLoan);
 }
 
 // for (const [k, v] of Object.entries({
