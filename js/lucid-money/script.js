@@ -81,6 +81,13 @@ const calculator = new Vue({
                             borderWidth: 2
                         },
                         {
+                            label: 'Total',
+                            data: [],
+                            backgroundColor: ['rgba(57,31,36,0.2)'],
+                            borderColor: ['rgb(16,8,10)'],
+                            borderWidth: 2
+                        },
+                        {
                             label: 'Expenses',
                             data: [],
                             backgroundColor: ['rgba(255,58,95, 0.2)'],
@@ -95,16 +102,15 @@ const calculator = new Vue({
                             stacks: true
                         }]
                     },
-                    elements: {line: {tension: 0.3}}
+                    elements: {line: {tension: 0.1}}
                 }
             });
 
         },
         refreshChart() {
-            this.chartDataTemp = []
-            this.chartDataTemp.push(this.monthlyIncome);
+            this.chartDataTemp = [];
             const monthlyExp = this.weeklyExpense * 52 / 12;
-
+            this.chartDataTemp.push(this.monthlyIncome);
             this.chartDataTemp.push(this.chartDataTemp[0] - monthlyExp);
             this.chartDataTemp.push(this.chartDataTemp[1] + this.monthlyIncome);
             this.chartDataTemp.push(this.chartDataTemp[2] - monthlyExp);
@@ -130,9 +136,65 @@ const calculator = new Vue({
             this.chartDataTemp.push(this.chartDataTemp[22] - monthlyExp);
             this.chartDataTemp.push(this.chartDataTemp[23] + this.monthlyIncome);
 
+            this.chartDataTemp2 = [];
+            this.chartDataTemp2.push(this.monthlyIncome);
+            this.chartDataTemp2.push(this.chartDataTemp2[0]);
+            this.chartDataTemp2.push(this.chartDataTemp2[1] + this.monthlyIncome);
+            this.chartDataTemp2.push(this.chartDataTemp2[2]);
+            this.chartDataTemp2.push(this.chartDataTemp2[3] + this.monthlyIncome);
+            this.chartDataTemp2.push(this.chartDataTemp2[4]);
+            this.chartDataTemp2.push(this.chartDataTemp2[5] + this.monthlyIncome);
+            this.chartDataTemp2.push(this.chartDataTemp2[6]);
+            this.chartDataTemp2.push(this.chartDataTemp2[7] + this.monthlyIncome);
+            this.chartDataTemp2.push(this.chartDataTemp2[8]);
+            this.chartDataTemp2.push(this.chartDataTemp2[9] + this.monthlyIncome);
+            this.chartDataTemp2.push(this.chartDataTemp2[10]);
+            this.chartDataTemp2.push(this.chartDataTemp2[11] + this.monthlyIncome);
+            this.chartDataTemp2.push(this.chartDataTemp2[12]);
+            this.chartDataTemp2.push(this.chartDataTemp2[13] + this.monthlyIncome);
+            this.chartDataTemp2.push(this.chartDataTemp2[14]);
+            this.chartDataTemp2.push(this.chartDataTemp2[15] + this.monthlyIncome);
+            this.chartDataTemp2.push(this.chartDataTemp2[16]);
+            this.chartDataTemp2.push(this.chartDataTemp2[17] + this.monthlyIncome);
+            this.chartDataTemp2.push(this.chartDataTemp2[18]);
+            this.chartDataTemp2.push(this.chartDataTemp2[19] + this.monthlyIncome);
+            this.chartDataTemp2.push(this.chartDataTemp2[20]);
+            this.chartDataTemp2.push(this.chartDataTemp2[21] + this.monthlyIncome);
+            this.chartDataTemp2.push(this.chartDataTemp2[22]);
+            this.chartDataTemp2.push(this.chartDataTemp2[23] + this.monthlyIncome);
+
+            this.chartDataTemp3 = [];
+            this.chartDataTemp3.push(0);
+            this.chartDataTemp3.push(this.chartDataTemp3[0] - monthlyExp);
+            this.chartDataTemp3.push(this.chartDataTemp3[1]);
+            this.chartDataTemp3.push(this.chartDataTemp3[2] - monthlyExp);
+            this.chartDataTemp3.push(this.chartDataTemp3[3]);
+            this.chartDataTemp3.push(this.chartDataTemp3[4] - monthlyExp);
+            this.chartDataTemp3.push(this.chartDataTemp3[5]);
+            this.chartDataTemp3.push(this.chartDataTemp3[6] - monthlyExp);
+            this.chartDataTemp3.push(this.chartDataTemp3[7]);
+            this.chartDataTemp3.push(this.chartDataTemp3[8] - monthlyExp);
+            this.chartDataTemp3.push(this.chartDataTemp3[9]);
+            this.chartDataTemp3.push(this.chartDataTemp3[10] - monthlyExp);
+            this.chartDataTemp3.push(this.chartDataTemp3[11]);
+            this.chartDataTemp3.push(this.chartDataTemp3[12] - monthlyExp);
+            this.chartDataTemp3.push(this.chartDataTemp3[13]);
+            this.chartDataTemp3.push(this.chartDataTemp3[14] - monthlyExp);
+            this.chartDataTemp3.push(this.chartDataTemp3[15]);
+            this.chartDataTemp3.push(this.chartDataTemp3[16] - monthlyExp);
+            this.chartDataTemp3.push(this.chartDataTemp3[17]);
+            this.chartDataTemp3.push(this.chartDataTemp3[18] - monthlyExp);
+            this.chartDataTemp3.push(this.chartDataTemp3[19]);
+            this.chartDataTemp3.push(this.chartDataTemp3[20] - monthlyExp);
+            this.chartDataTemp3.push(this.chartDataTemp3[21]);
+            this.chartDataTemp3.push(this.chartDataTemp3[22] - monthlyExp);
+            this.chartDataTemp3.push(this.chartDataTemp3[23]);
+
             if (JSON.stringify(this.chartData) !== JSON.stringify(this.chartDataTemp)) {
                 this.chartData = this.chartDataTemp;
-                this.chart.data.datasets[0].data = this.chartData
+                this.chart.data.datasets[0].data = this.chartDataTemp2
+                this.chart.data.datasets[1].data = this.chartData
+                this.chart.data.datasets[2].data = this.chartDataTemp3
                 this.chart.update();
             }
         }
