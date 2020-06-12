@@ -100,6 +100,34 @@
 
         <canvas id="myChart" width="400" height="300"></canvas>
 
+        <h3>Totals</h3>
+        <div class="grid-container">
+            <div>
+                <label>-</label>
+                <div class="box">Income</div>
+                <div class="box">Spending</div>
+                <div class="box">Result</div>
+            </div>
+            <div>
+                <label>Yearly</label>
+                <div class="box">&pound;{{ numFormat(parseInt(income)) }}</div>
+                <div class="box negative">&pound;{{ numFormat(yearlyExpense) }}</div>
+                <div class="box">&pound;{{ numFormat(parseInt(income)-yearlyExpense) }}</div>
+            </div>
+            <div>
+                <label>Over 10 years</label>
+                <div class="box">&pound;{{ numFormat(parseInt(income)*10) }}</div>
+                <div class="box negative">&pound;{{ numFormat(yearlyExpense*10) }}</div>
+                <div class="box">&pound;{{ numFormat((parseInt(income)-yearlyExpense)*10) }}</div>
+            </div>
+            <div>
+                <label>Over 40 years</label>
+                <div class="box">&pound;{{ numFormat(parseInt(income)*40) }}</div>
+                <div class="box negative">&pound;{{ numFormat(yearlyExpense*40) }}</div>
+                <div class="box">&pound;{{ numFormat((parseInt(income)-yearlyExpense)*40) }}</div>
+            </div>
+        </div>
+
     </div>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js"
