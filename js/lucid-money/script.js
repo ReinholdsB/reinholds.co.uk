@@ -16,7 +16,52 @@ let formData = {
         {text: 'Daily', value: '365'}
     ],
     chartData: [],
-    chartDataTemp: [],
+    incomeMoneyFlow: [],
+    expenseMoneyFlow: [],
+    totalMoneyFlow: []
+}
+
+const arrayOfYears = [...Array(40).keys()];
+const monthArray = [...Array(24).keys()];
+
+function makeChart(ctx2, labels = arrayOfYears.flatMap(i => i + 1)) {
+    return new Chart(ctx2, {
+        type: 'line',
+        data: {
+            labels: labels,
+            datasets: [
+                {
+                    label: 'Income',
+                    data: [],
+                    backgroundColor: ['rgba(42,255,35,0.2)'],
+                    borderColor: ['rgb(42,255,35)'],
+                    borderWidth: 2
+                },
+                {
+                    label: 'Total',
+                    data: [],
+                    backgroundColor: ['rgba(57,31,36,0.2)'],
+                    borderColor: ['rgb(16,8,10)'],
+                    borderWidth: 2
+                },
+                {
+                    label: 'Expenses',
+                    data: [],
+                    backgroundColor: ['rgba(255,58,95, 0.2)'],
+                    borderColor: ['rgb(255,58,95)'],
+                    borderWidth: 2
+                }]
+        },
+        options: {
+            scales: {
+                yAxes: [{
+                    ticks: {beginAtZero: true},
+                    stacks: true
+                }]
+            },
+            elements: {line: {tension: 0.1}}
+        }
+    });
 }
 
 const calculator = new Vue({
@@ -69,173 +114,72 @@ const calculator = new Vue({
         initChart() {
             const ctx = document.getElementById('myChart');
             const ctx2 = document.getElementById('myChart2');
-            this.chart = new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: ['January', '-', 'February', '-', 'March', '-', 'April', '-', 'May', '-', 'June', '-', 'July', '-', 'August', '-', 'September', '-', 'October', '-', 'November', '-', 'December', '-'],
-                    datasets: [
-                        {
-                            label: 'Income',
-                            data: [],
-                            backgroundColor: ['rgba(42,255,35,0.2)'],
-                            borderColor: ['rgb(42,255,35)'],
-                            borderWidth: 2
-                        },
-                        {
-                            label: 'Total',
-                            data: [],
-                            backgroundColor: ['rgba(57,31,36,0.2)'],
-                            borderColor: ['rgb(16,8,10)'],
-                            borderWidth: 2
-                        },
-                        {
-                            label: 'Expenses',
-                            data: [],
-                            backgroundColor: ['rgba(255,58,95, 0.2)'],
-                            borderColor: ['rgb(255,58,95)'],
-                            borderWidth: 2
-                        }]
-                },
-                options: {
-                    scales: {
-                        yAxes: [{
-                            ticks: {beginAtZero: true},
-                            stacks: true
-                        }]
-                    },
-                    elements: {line: {tension: 0.1}}
-                }
-            });
-            this.chart2 = new Chart(ctx2, {
-                type: 'line',
-                data: {
-                    labels: [...Array(40).keys()].flatMap(i => i+1),
-                    datasets: [
-                        {
-                            label: 'Income',
-                            data: [],
-                            backgroundColor: ['rgba(42,255,35,0.2)'],
-                            borderColor: ['rgb(42,255,35)'],
-                            borderWidth: 2
-                        },
-                        {
-                            label: 'Total',
-                            data: [],
-                            backgroundColor: ['rgba(57,31,36,0.2)'],
-                            borderColor: ['rgb(16,8,10)'],
-                            borderWidth: 2
-                        },
-                        {
-                            label: 'Expenses',
-                            data: [],
-                            backgroundColor: ['rgba(255,58,95, 0.2)'],
-                            borderColor: ['rgb(255,58,95)'],
-                            borderWidth: 2
-                        }]
-                },
-                options: {
-                    scales: {
-                        yAxes: [{
-                            ticks: {beginAtZero: true},
-                            stacks: true
-                        }]
-                    },
-                    elements: {line: {tension: 0.1}}
-                }
-            });
+            this.chart = makeChart(ctx, ['January', '-', 'February', '-', 'March', '-', 'April', '-', 'May', '-', 'June', '-', 'July', '-', 'August', '-', 'September', '-', 'October', '-', 'November', '-', 'December', '-'],
+            );
+            this.chart2 = makeChart(ctx2, arrayOfYears.flatMap(i => i + 1));
 
         },
         refreshChart() {
-            this.chartDataTemp = [];
             const monthlyExp = this.weeklyExpense * 52 / 12;
-            this.chartDataTemp.push(this.monthlyIncome);
-            this.chartDataTemp.push(this.chartDataTemp[0] - monthlyExp);
-            this.chartDataTemp.push(this.chartDataTemp[1] + this.monthlyIncome);
-            this.chartDataTemp.push(this.chartDataTemp[2] - monthlyExp);
-            this.chartDataTemp.push(this.chartDataTemp[3] + this.monthlyIncome);
-            this.chartDataTemp.push(this.chartDataTemp[4] - monthlyExp);
-            this.chartDataTemp.push(this.chartDataTemp[5] + this.monthlyIncome);
-            this.chartDataTemp.push(this.chartDataTemp[6] - monthlyExp);
-            this.chartDataTemp.push(this.chartDataTemp[7] + this.monthlyIncome);
-            this.chartDataTemp.push(this.chartDataTemp[8] - monthlyExp);
-            this.chartDataTemp.push(this.chartDataTemp[9] + this.monthlyIncome);
-            this.chartDataTemp.push(this.chartDataTemp[10] - monthlyExp);
-            this.chartDataTemp.push(this.chartDataTemp[11] + this.monthlyIncome);
-            this.chartDataTemp.push(this.chartDataTemp[12] - monthlyExp);
-            this.chartDataTemp.push(this.chartDataTemp[13] + this.monthlyIncome);
-            this.chartDataTemp.push(this.chartDataTemp[14] - monthlyExp);
-            this.chartDataTemp.push(this.chartDataTemp[15] + this.monthlyIncome);
-            this.chartDataTemp.push(this.chartDataTemp[16] - monthlyExp);
-            this.chartDataTemp.push(this.chartDataTemp[17] + this.monthlyIncome);
-            this.chartDataTemp.push(this.chartDataTemp[18] - monthlyExp);
-            this.chartDataTemp.push(this.chartDataTemp[19] + this.monthlyIncome);
-            this.chartDataTemp.push(this.chartDataTemp[20] - monthlyExp);
-            this.chartDataTemp.push(this.chartDataTemp[21] + this.monthlyIncome);
-            this.chartDataTemp.push(this.chartDataTemp[22] - monthlyExp);
-            this.chartDataTemp.push(this.chartDataTemp[23] + this.monthlyIncome);
+            this.totalMoneyFlow = monthArray.flatMap(i => {
+                if (i % 2 !== 0) {
+                    return (this.totalMoneyFlow[i - 1] || 0) - monthlyExp;
+                } else {
+                    return (this.totalMoneyFlow[i - 1] || 0) + this.monthlyIncome;
+                }
+            });
+            // console.log(this.temp)
+            // this.totalMoneyFlow = [];
+            // this.totalMoneyFlow.push(this.monthlyIncome);
+            // this.totalMoneyFlow.push(this.totalMoneyFlow[0] - monthlyExp);
+            // this.totalMoneyFlow.push(this.totalMoneyFlow[1] + this.monthlyIncome);
+            // this.totalMoneyFlow.push(this.totalMoneyFlow[2] - monthlyExp);
+            // this.totalMoneyFlow.push(this.totalMoneyFlow[3] + this.monthlyIncome);
+            // this.totalMoneyFlow.push(this.totalMoneyFlow[4] - monthlyExp);
+            // this.totalMoneyFlow.push(this.totalMoneyFlow[5] + this.monthlyIncome);
+            // this.totalMoneyFlow.push(this.totalMoneyFlow[6] - monthlyExp);
+            // this.totalMoneyFlow.push(this.totalMoneyFlow[7] + this.monthlyIncome);
+            // this.totalMoneyFlow.push(this.totalMoneyFlow[8] - monthlyExp);
+            // this.totalMoneyFlow.push(this.totalMoneyFlow[9] + this.monthlyIncome);
+            // this.totalMoneyFlow.push(this.totalMoneyFlow[10] - monthlyExp);
+            // this.totalMoneyFlow.push(this.totalMoneyFlow[11] + this.monthlyIncome);
+            // this.totalMoneyFlow.push(this.totalMoneyFlow[12] - monthlyExp);
+            // this.totalMoneyFlow.push(this.totalMoneyFlow[13] + this.monthlyIncome);
+            // this.totalMoneyFlow.push(this.totalMoneyFlow[14] - monthlyExp);
+            // this.totalMoneyFlow.push(this.totalMoneyFlow[15] + this.monthlyIncome);
+            // this.totalMoneyFlow.push(this.totalMoneyFlow[16] - monthlyExp);
+            // this.totalMoneyFlow.push(this.totalMoneyFlow[17] + this.monthlyIncome);
+            // this.totalMoneyFlow.push(this.totalMoneyFlow[18] - monthlyExp);
+            // this.totalMoneyFlow.push(this.totalMoneyFlow[19] + this.monthlyIncome);
+            // this.totalMoneyFlow.push(this.totalMoneyFlow[20] - monthlyExp);
+            // this.totalMoneyFlow.push(this.totalMoneyFlow[21] + this.monthlyIncome);
+            // this.totalMoneyFlow.push(this.totalMoneyFlow[22] - monthlyExp);
+            // this.totalMoneyFlow.push(this.totalMoneyFlow[23] + this.monthlyIncome);
 
-            this.chartDataTemp2 = [];
-            this.chartDataTemp2.push(this.monthlyIncome);
-            this.chartDataTemp2.push(this.chartDataTemp2[0]);
-            this.chartDataTemp2.push(this.chartDataTemp2[1] + this.monthlyIncome);
-            this.chartDataTemp2.push(this.chartDataTemp2[2]);
-            this.chartDataTemp2.push(this.chartDataTemp2[3] + this.monthlyIncome);
-            this.chartDataTemp2.push(this.chartDataTemp2[4]);
-            this.chartDataTemp2.push(this.chartDataTemp2[5] + this.monthlyIncome);
-            this.chartDataTemp2.push(this.chartDataTemp2[6]);
-            this.chartDataTemp2.push(this.chartDataTemp2[7] + this.monthlyIncome);
-            this.chartDataTemp2.push(this.chartDataTemp2[8]);
-            this.chartDataTemp2.push(this.chartDataTemp2[9] + this.monthlyIncome);
-            this.chartDataTemp2.push(this.chartDataTemp2[10]);
-            this.chartDataTemp2.push(this.chartDataTemp2[11] + this.monthlyIncome);
-            this.chartDataTemp2.push(this.chartDataTemp2[12]);
-            this.chartDataTemp2.push(this.chartDataTemp2[13] + this.monthlyIncome);
-            this.chartDataTemp2.push(this.chartDataTemp2[14]);
-            this.chartDataTemp2.push(this.chartDataTemp2[15] + this.monthlyIncome);
-            this.chartDataTemp2.push(this.chartDataTemp2[16]);
-            this.chartDataTemp2.push(this.chartDataTemp2[17] + this.monthlyIncome);
-            this.chartDataTemp2.push(this.chartDataTemp2[18]);
-            this.chartDataTemp2.push(this.chartDataTemp2[19] + this.monthlyIncome);
-            this.chartDataTemp2.push(this.chartDataTemp2[20]);
-            this.chartDataTemp2.push(this.chartDataTemp2[21] + this.monthlyIncome);
-            this.chartDataTemp2.push(this.chartDataTemp2[22]);
-            this.chartDataTemp2.push(this.chartDataTemp2[23] + this.monthlyIncome);
+            this.incomeMoneyFlow = monthArray.flatMap(i => {
+                if (i % 2 !== 0) {
+                    return (this.incomeMoneyFlow[i - 1] || 0);
+                } else {
+                    return (this.incomeMoneyFlow[i - 1] || 0) + this.monthlyIncome;
+                }
 
-            this.chartDataTemp3 = [];
-            this.chartDataTemp3.push(0);
-            this.chartDataTemp3.push(this.chartDataTemp3[0] - monthlyExp);
-            this.chartDataTemp3.push(this.chartDataTemp3[1]);
-            this.chartDataTemp3.push(this.chartDataTemp3[2] - monthlyExp);
-            this.chartDataTemp3.push(this.chartDataTemp3[3]);
-            this.chartDataTemp3.push(this.chartDataTemp3[4] - monthlyExp);
-            this.chartDataTemp3.push(this.chartDataTemp3[5]);
-            this.chartDataTemp3.push(this.chartDataTemp3[6] - monthlyExp);
-            this.chartDataTemp3.push(this.chartDataTemp3[7]);
-            this.chartDataTemp3.push(this.chartDataTemp3[8] - monthlyExp);
-            this.chartDataTemp3.push(this.chartDataTemp3[9]);
-            this.chartDataTemp3.push(this.chartDataTemp3[10] - monthlyExp);
-            this.chartDataTemp3.push(this.chartDataTemp3[11]);
-            this.chartDataTemp3.push(this.chartDataTemp3[12] - monthlyExp);
-            this.chartDataTemp3.push(this.chartDataTemp3[13]);
-            this.chartDataTemp3.push(this.chartDataTemp3[14] - monthlyExp);
-            this.chartDataTemp3.push(this.chartDataTemp3[15]);
-            this.chartDataTemp3.push(this.chartDataTemp3[16] - monthlyExp);
-            this.chartDataTemp3.push(this.chartDataTemp3[17]);
-            this.chartDataTemp3.push(this.chartDataTemp3[18] - monthlyExp);
-            this.chartDataTemp3.push(this.chartDataTemp3[19]);
-            this.chartDataTemp3.push(this.chartDataTemp3[20] - monthlyExp);
-            this.chartDataTemp3.push(this.chartDataTemp3[21]);
-            this.chartDataTemp3.push(this.chartDataTemp3[22] - monthlyExp);
-            this.chartDataTemp3.push(this.chartDataTemp3[23]);
+            });
+            this.expenseMoneyFlow = monthArray.flatMap(i => {
+                if (i % 2 !== 0) {
+                    return (this.expenseMoneyFlow[i - 1] || 0) - monthlyExp;
+                } else {
+                    return (this.expenseMoneyFlow[i - 1] || 0);
+                }
+            });
 
-            if (JSON.stringify(this.chartData) !== JSON.stringify(this.chartDataTemp)) {
-                this.chartData = this.chartDataTemp;
-                this.chart.data.datasets[0].data = this.chartDataTemp2;
+            if (JSON.stringify(this.chartData) !== JSON.stringify(this.totalMoneyFlow)) {
+                this.chartData = this.totalMoneyFlow;
+                this.chart.data.datasets[0].data = this.incomeMoneyFlow;
                 this.chart.data.datasets[1].data = this.chartData;
-                this.chart.data.datasets[2].data = this.chartDataTemp3;
-                this.chart2.data.datasets[0].data = [...Array(40).keys()].flatMap(i => this.income*(i+1));
-                this.chart2.data.datasets[1].data = [...Array(40).keys()].flatMap(i => (this.income - this.yearlyExpense)*(i+1));
-                this.chart2.data.datasets[2].data = [...Array(40).keys()].flatMap(i => this.yearlyExpense*(i+1));
+                this.chart.data.datasets[2].data = this.expenseMoneyFlow;
+                this.chart2.data.datasets[0].data = arrayOfYears.flatMap(i => this.income * (i + 1));
+                this.chart2.data.datasets[1].data = arrayOfYears.flatMap(i => (this.income - this.yearlyExpense) * (i + 1));
+                this.chart2.data.datasets[2].data = arrayOfYears.flatMap(i => -this.yearlyExpense * (i + 1));
                 this.chart.update();
                 this.chart2.update();
             }
