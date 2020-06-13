@@ -1,6 +1,6 @@
 'use strict';
 
-const defaultSalary = 25000;
+const defaultSalary = 1500;
 const arrayOfYears = [...Array(40).keys()];
 const monthArray = [...Array(24).keys()];
 
@@ -8,7 +8,7 @@ let formData = {
     dayExpense: 0,
     monthExpense: 1000,
     yearExpense: 0,
-    income: defaultSalary,
+    monthlyIncome: defaultSalary,
     options: [
         {text: 'Yearly', value: '1'},
         {text: 'Monthly', value: '12'},
@@ -86,13 +86,13 @@ const calculator = new Vue({
             return this.yearlyIncome;
         },
         dailyIncome: function () {
-            return roundCurrency(this.income / 365);
+            return roundCurrency(this.monthlyIncome / 365);
         },
         weeklyIncome: function () {
-            return roundCurrency(this.income / 52);
+            return roundCurrency(this.monthlyIncome / 52);
         },
-        monthlyIncome: function () {
-            return roundCurrency(this.income / 12);
+        income: function () {
+            return roundCurrency(this.monthlyIncome * 12);
         }
     },
     methods: {

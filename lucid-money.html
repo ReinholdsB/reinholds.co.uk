@@ -32,7 +32,7 @@
                     <label for="salary-range-daily">-</label>
                     <label for="salary-daily">Daily</label>
                     <input id="salary-daily" type="number" name="dailyIncome" class="currency"
-                           v-model.number="dailyIncome"/>
+                           v-model.number="dailyIncome" disabled/>
                     <input id="salary-range-daily" type="range" min="0" max="600" step="10" class="currency slider"
                            v-model.number="dailyIncome" disabled>
                 </div>
@@ -40,7 +40,7 @@
                     <label for="salary-range-weekly">-</label>
                     <label for="salary-weekly">Weekly</label>
                     <input id="salary-weekly" type="number" name="weeklyIncome" class="currency"
-                           v-model.number="weeklyIncome"/>
+                           v-model.number="weeklyIncome" disabled/>
                     <input id="salary-range-weekly" type="range" min="0" max="4000" step="10" class="currency slider"
                            v-model.number="weeklyIncome" disabled>
                 </div>
@@ -50,14 +50,14 @@
                     <input id="salary-monthly" type="number" name="monthlyIncome" class="currency"
                            v-model.number="monthlyIncome"/>
                     <input id="salary-range-monthly" type="range" min="0" max="17000" step="10" class="currency slider"
-                           v-model.number="monthlyIncome" disabled>
+                           v-model.number="monthlyIncome">
                 </div>
                 <div>
                     <label for="income-range-yearly">-</label>
                     <label for="income-yearly">Yearly</label>
-                    <input id="income-yearly" type="number" name="income" class="currency" v-model.number="income"/>
+                    <input id="income-yearly" type="number" name="income" class="currency" v-model.number="income" disabled/>
                     <input id="income-range-yearly" type="range" min="0" max="200000" step="10" class="currency slider"
-                           v-model.number="income">
+                           v-model.number="income" disabled>
                 </div>
             </div>
 
