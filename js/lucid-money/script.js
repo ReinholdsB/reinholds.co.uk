@@ -1,28 +1,24 @@
 'use strict';
 
 const defaultSalary = 25000;
+const arrayOfYears = [...Array(40).keys()];
+const monthArray = [...Array(24).keys()];
 
 let formData = {
     dayExpense: 0,
     monthExpense: 1000,
     yearExpense: 0,
-    year: "1920",
     income: defaultSalary,
-    scale: 1,
     options: [
         {text: 'Yearly', value: '1'},
         {text: 'Monthly', value: '12'},
         {text: 'Weekly', value: '52'},
         {text: 'Daily', value: '365'}
     ],
-    chartData: [],
     incomeMoneyFlow: [],
     expenseMoneyFlow: [],
     totalMoneyFlow: []
 }
-
-const arrayOfYears = [...Array(40).keys()];
-const monthArray = [...Array(24).keys()];
 
 function makeChart(ctx2, labels = arrayOfYears.flatMap(i => i + 1)) {
     return new Chart(ctx2, {
@@ -128,34 +124,6 @@ const calculator = new Vue({
                     return (this.totalMoneyFlow[i - 1] || 0) + this.monthlyIncome;
                 }
             });
-            // console.log(this.temp)
-            // this.totalMoneyFlow = [];
-            // this.totalMoneyFlow.push(this.monthlyIncome);
-            // this.totalMoneyFlow.push(this.totalMoneyFlow[0] - monthlyExp);
-            // this.totalMoneyFlow.push(this.totalMoneyFlow[1] + this.monthlyIncome);
-            // this.totalMoneyFlow.push(this.totalMoneyFlow[2] - monthlyExp);
-            // this.totalMoneyFlow.push(this.totalMoneyFlow[3] + this.monthlyIncome);
-            // this.totalMoneyFlow.push(this.totalMoneyFlow[4] - monthlyExp);
-            // this.totalMoneyFlow.push(this.totalMoneyFlow[5] + this.monthlyIncome);
-            // this.totalMoneyFlow.push(this.totalMoneyFlow[6] - monthlyExp);
-            // this.totalMoneyFlow.push(this.totalMoneyFlow[7] + this.monthlyIncome);
-            // this.totalMoneyFlow.push(this.totalMoneyFlow[8] - monthlyExp);
-            // this.totalMoneyFlow.push(this.totalMoneyFlow[9] + this.monthlyIncome);
-            // this.totalMoneyFlow.push(this.totalMoneyFlow[10] - monthlyExp);
-            // this.totalMoneyFlow.push(this.totalMoneyFlow[11] + this.monthlyIncome);
-            // this.totalMoneyFlow.push(this.totalMoneyFlow[12] - monthlyExp);
-            // this.totalMoneyFlow.push(this.totalMoneyFlow[13] + this.monthlyIncome);
-            // this.totalMoneyFlow.push(this.totalMoneyFlow[14] - monthlyExp);
-            // this.totalMoneyFlow.push(this.totalMoneyFlow[15] + this.monthlyIncome);
-            // this.totalMoneyFlow.push(this.totalMoneyFlow[16] - monthlyExp);
-            // this.totalMoneyFlow.push(this.totalMoneyFlow[17] + this.monthlyIncome);
-            // this.totalMoneyFlow.push(this.totalMoneyFlow[18] - monthlyExp);
-            // this.totalMoneyFlow.push(this.totalMoneyFlow[19] + this.monthlyIncome);
-            // this.totalMoneyFlow.push(this.totalMoneyFlow[20] - monthlyExp);
-            // this.totalMoneyFlow.push(this.totalMoneyFlow[21] + this.monthlyIncome);
-            // this.totalMoneyFlow.push(this.totalMoneyFlow[22] - monthlyExp);
-            // this.totalMoneyFlow.push(this.totalMoneyFlow[23] + this.monthlyIncome);
-
             this.incomeMoneyFlow = monthArray.flatMap(i => {
                 if (i % 2 !== 0) {
                     return (this.incomeMoneyFlow[i - 1] || 0);
@@ -189,42 +157,4 @@ const calculator = new Vue({
 
 function roundCurrency(x) {
     return Math.round(x * 100) / 100;
-}
-
-// for sync tests
-function test(condition, message) {
-    try {
-        console.assert.apply(console, arguments);
-        if (typeof message === 'string' && condition) {
-            // console.log('\u2714 ' + message);
-        }
-    } catch (error) {
-        test.exitCode = 1;
-        console.error('\u2716 ' + error);
-    }
-}
-
-// for async tests
-test.async = function (fn, timeout) {
-    let timer = setTimeout(
-        function () {
-            test(false, 'timeout ' + fn);
-        },
-        timeout || test.timeout
-    );
-    fn(function () {
-        clearTimeout(timer);
-    });
-};
-
-// default timeout
-test.timeout = 10000;
-
-// for node env only
-try {
-    process.on('exit', function () {
-        process.exit(test.exitCode || 0);
-    });
-    module.exports = test;
-} catch (browser) {
 }
