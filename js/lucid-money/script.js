@@ -86,10 +86,10 @@ const calculator = new Vue({
             return this.yearlyIncome;
         },
         dailyIncome: function () {
-            return roundCurrency(this.monthlyIncome / 365);
+            return roundCurrency(this.monthlyIncome * 12 / 365);
         },
         weeklyIncome: function () {
-            return roundCurrency(this.monthlyIncome / 52);
+            return roundCurrency(this.monthlyIncome * 12 / 52);
         },
         income: function () {
             return roundCurrency(this.monthlyIncome * 12);
