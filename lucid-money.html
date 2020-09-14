@@ -29,20 +29,14 @@
             <h3>Income (after tax)</h3>
             <div class="grid-container">
                 <div>
-                    <label for="salary-range-daily">-</label>
                     <label for="salary-daily">Daily</label>
                     <input id="salary-daily" type="number" name="dailyIncome" class="currency"
                            v-model.number="dailyIncome" disabled/>
-                    <input id="salary-range-daily" type="range" min="0" max="600" step="10" class="currency slider"
-                           v-model.number="dailyIncome" disabled>
                 </div>
                 <div>
-                    <label for="salary-range-weekly">-</label>
                     <label for="salary-weekly">Weekly</label>
                     <input id="salary-weekly" type="number" name="weeklyIncome" class="currency"
                            v-model.number="weeklyIncome" disabled/>
-                    <input id="salary-range-weekly" type="range" min="0" max="4000" step="10" class="currency slider"
-                           v-model.number="weeklyIncome" disabled>
                 </div>
                 <div>
                     <label for="salary-range-monthly">-</label>
@@ -53,11 +47,8 @@
                            v-model.number="monthlyIncome">
                 </div>
                 <div>
-                    <label for="income-range-yearly">-</label>
                     <label for="income-yearly">Yearly</label>
                     <input id="income-yearly" type="number" name="income" class="currency" v-model.number="income" disabled/>
-                    <input id="income-range-yearly" type="range" min="0" max="200000" step="10" class="currency slider"
-                           v-model.number="income" disabled>
                 </div>
             </div>
 
@@ -72,12 +63,9 @@
                            v-model.number="dayExpense">
                 </div>
                 <div>
-                    <label for="weekly-expense-range">-</label>
                     <label for="weekly-expense">Weekly</label>
                     <input id="weekly-expense" type="number" name="weekly-expense" class="currency"
-                           v-model.number="weeklyExpense"/>
-                    <input id="weekly-expense-range" type="range" min="0" max="1000" step="1" class="currency slider"
-                           v-model.number="weeklyExpense" disabled>
+                           v-model.number="weeklyExpense" disabled/>
                 </div>
                 <div>
                     <label for="month-expense-range">-</label>

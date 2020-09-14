@@ -352,57 +352,6 @@ function calcStudentLoanRepayment(salary, plan) {
     return roundCurrency(studentLoan);
 }
 
-// for (const [k, v] of Object.entries({
-//     '01': {salary: 5000, ni: 0, incomeTax: 0, employerNi: 0, dividend: 0, dividendTax: 0},
-//     '02': {salary: 8424, ni: 0, incomeTax: 0, employerNi: 0, dividend: 0, dividendTax: 0},
-//     '03': {salary: 15000, ni: 789.12, incomeTax: 630, employerNi: 907.49, dividend: 0, dividendTax: 0},
-//     '04': {salary: 46350, ni: 4551.12, incomeTax: 6900, employerNi: 5233.79, dividend: 0, dividendTax: 0},
-//     '05': {salary: 80000, ni: 5227.52, incomeTax: 20360, employerNi: 9877.49, dividend: 0, dividendTax: 0},
-//     '06': {salary: 150000, ni: 6627.52, incomeTax: 53100, employerNi: 19537.49, dividend: 0, dividendTax: 0},
-//     '07': {salary: 200000, ni: 7627.52, incomeTax: 75600, employerNi: 26437.49, dividend: 0, dividendTax: 0},
-//
-//     '11': {salary: 1000, ni: 0, incomeTax: 0, employerNi: 0, dividend: 2000, dividendTax: 0},
-//     '14': {salary: 46350, ni: 4551.12, incomeTax: 6900, employerNi: 5233.79, dividend: 2000, dividendTax: 0},
-//     '17': {salary: 200000, ni: 7627.52, incomeTax: 75600, employerNi: 26437.49, dividend: 2000, dividendTax: 0},
-//
-//     '21': {salary: 0, ni: 0, incomeTax: 0, employerNi: 0, dividend: 5000, dividendTax: 0},
-//     '22': {salary: 0, ni: 0, incomeTax: 0, employerNi: 0, dividend: 10000, dividendTax: 0},
-//     '23': {salary: 0, ni: 0, incomeTax: 0, employerNi: 0, dividend: 30000, dividendTax: 1211},
-//     '24': {salary: 0, ni: 0, incomeTax: 0, employerNi: 0, dividend: 50000, dividendTax: 3624},
-//     '25': {salary: 0, ni: 0, incomeTax: 0, employerNi: 0, dividend: 100000, dividendTax: 19874},
-//     '26': {salary: 0, ni: 0, incomeTax: 0, employerNi: 0, dividend: 200000, dividendTax: 59025},
-//
-//     '31': {salary: 5000, ni: 0, incomeTax: 0, employerNi: 0, dividend: 10000, dividendTax: 86},
-//     '32': {salary: 5000, ni: 0, incomeTax: 0, employerNi: 0, dividend: 30000, dividendTax: 1586},
-//     '33': {salary: 8424, ni: 0, incomeTax: 0, employerNi: 0, dividend: 30000, dividendTax: 1843},
-//     '34': {salary: 8424, ni: 0, incomeTax: 0, employerNi: 0, dividend: 100000, dividendTax: 23922},
-//     '35': {salary: 8424, ni: 0, incomeTax: 0, employerNi: 0, dividend: 200000, dividendTax: 61603},
-//
-//     '36': {salary: 15000, ni: 789.12, incomeTax: 630, employerNi: 907.49, dividend: 50000, dividendTax: 8263},
-//     '44': {salary: 46350, ni: 4551.12, incomeTax: 6900, employerNi: 5233.79, dividend: 50000, dividendTax: 15600},
-//     '45': {salary: 80000, ni: 5227.52, incomeTax: 20360, employerNi: 9877.49, dividend: 50000, dividendTax: 15600},
-//     '46': {salary: 150000, ni: 6627.52, incomeTax: 53100, employerNi: 19537.49, dividend: 50000, dividendTax: 19050},
-//     '47': {salary: 200000, ni: 7627.52, incomeTax: 75600, employerNi: 26437.49, dividend: 50000, dividendTax: 38100},
-// })) {
-//     const actualNi = calcSalaryNI(v.salary);
-//     test(actualNi === v.ni,
-//         "TEST id=" + k + " - NI formula          - salary=" + v.salary + ", expected=" + v.ni + ", actual=" + actualNi);
-//
-//     const actualIncomeTax = calcIncomeTax(v.salary, v.dividend);
-//     test(actualIncomeTax.totalTax === v.incomeTax,
-//         "TEST id=" + k + " - incomeTax formula   - salary=" + v.salary + ", dividend=" + v.dividend + ", expected=" + v.incomeTax + ", actual=" + actualIncomeTax.totalTax +
-//         ', FullResponse=' + JSON.stringify(actualIncomeTax));
-//
-//     const employerNi = calcEmployerNI(v.salary);
-//     test(employerNi === v.employerNi,
-//         "TEST id=" + k + " - employerNi formula  - salary=" + v.salary + ", expected=" + v.employerNi + ", actual=" + employerNi);
-//
-//     const dividendTax = calcSalaryAndDividendsTax(v.salary, v.dividend);
-//     test(dividendTax.totalTax === v.dividendTax,
-//         "TEST id=" + k + " - dividendTax formula - salary=" + v.salary + ", dividend=" + v.dividend + ", expected=" + v.dividendTax + ", actual=" + dividendTax.totalTax +
-//         ', FullResponse=' + JSON.stringify(dividendTax));
-// }
-
 // for sync tests
 function test(condition, message) {
     try {

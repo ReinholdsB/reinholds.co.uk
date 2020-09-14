@@ -20,20 +20,20 @@
 
             <h3>Split</h3>
 
-            <div class="grid-container">
+            <div class="sub-grid-container">
                 <div>
                     <label for="dividends-range">-</label>
                     <label for="dividends">Dividends</label>
                     <input id="dividends" name="dividends" class="currency"
                            v-model.number="dividends"/>
-                    <input id="dividends-range" type="range" min="0" max="200000" step="1000" class="currency slider"
+                    <input id="dividends-range" type="range" min="0" max="200000" step="500" class="currency slider"
                            v-model.number="dividends">
                 </div>
                 <div>
                     <label for="salary-range">-</label>
                     <label for="salary">Salary</label>
                     <input id="salary" type="number" name="salary" class="currency" v-model.number="salary"/>
-                    <input id="salary-range" type="range" min="0" max="200000" step="10" class="currency slider"
+                    <input id="salary-range" type="range" min="0" max="200000" step="500" class="currency slider"
                            v-model.number="salary">
                     <button @click="resetSalary">Reset</button>
                 </div>
